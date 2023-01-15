@@ -11,7 +11,7 @@ export default component$((user: userData) => {
         <>
             {todos.length
                 ? todos.map((todo) => <Todo key={todo.id} {...{ todo }} />)
-                : <p>Add your first todo item!</p>
+                : <p><b>Add your first todo item!</b></p>
             }
             <TodoForm uid={user.uid} />
         </>
