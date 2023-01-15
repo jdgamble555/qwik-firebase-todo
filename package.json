@@ -19,8 +19,7 @@
     "lint": "eslint \"src/**/*.ts*\"",
     "preview": "qwik build preview && vite preview --open",
     "start": "vite --open --mode ssr",
-    "qwik": "qwik",
-    "vercel-build": "npm run build"
+    "qwik": "qwik"
   },
   "devDependencies": {
     "@builder.io/qwik": "0.16.2",
