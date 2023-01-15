@@ -9,7 +9,10 @@ export default component$((user: userData) => {
     const { todos } = useTodos(user);
     return (
         <>
-            {todos.length && todos.map((todo) => <Todo key={todo.id} {...{ todo }} />)}
+            {todos.length
+                ? todos.map((todo) => <Todo key={todo.id} {...{ todo }} />)
+                : <p>Add your first todo item!</p>
+            }
             <TodoForm uid={user.uid} />
         </>
     );
