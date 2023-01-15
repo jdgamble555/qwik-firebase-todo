@@ -8,6 +8,7 @@ import {
 
 import { getFirestore } from 'firebase/firestore';
 
+// normally you should put this in your .env file
 const firebase_config = {
     apiKey: "AIzaSyC7Tu56_1ry-u9AnZfg_AjiMWvvNmFIPGU",
     authDomain: "test-projects-19046.firebaseapp.com",
