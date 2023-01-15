@@ -1,0 +1,8 @@
+.complete {
+    text-decoration: line-through;
+    color: green;
+}
+
+.right {
+    margin-right: 5px;
+}
