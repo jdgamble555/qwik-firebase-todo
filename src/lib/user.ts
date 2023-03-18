@@ -1,6 +1,6 @@
 import { useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { onIdTokenChanged, User } from 'firebase/auth';
-import { auth } from './firebase';
+import { auth, loginWithGoogle, logout } from './firebase';
 
 export interface userData {
     photoURL: string | null;
@@ -40,5 +40,9 @@ export function useUser() {
         return unsubscribe;
     });
 
-    return _store;
+    return {
+        ..._store,
+        loginWithGoogle: loginWithGoogle,
+        logout: logout
+    };
 };

@@ -1,9 +1,7 @@
 import { component$ } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
 import Profile from '~/components/profile';
-import { loginWithGoogle } from '~/lib/firebase';
 import { useUser } from '~/lib/user';
-//import { Link } from '@builder.io/qwik-city';
 
 export default component$(() => {
   const { user, loading } = useUser();
@@ -11,6 +9,7 @@ export default component$(() => {
   return (
     <center>
       <h1>Qwik Firebase Todo App</h1>
+
       {loading ? <Loading /> : user ? <Profile {...{ user }} /> : <Login />}
     </center>
   );
@@ -21,6 +20,9 @@ export const Loading = () => {
 };
 
 export const Login = () => {
+
+  const { loginWithGoogle } = useUser();
+
   return <button onClick$={() => loginWithGoogle()}>Signin with Google</button>
 };
 
