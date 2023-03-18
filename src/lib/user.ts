@@ -1,4 +1,4 @@
-import { useStore, useVisibleTask$ } from '@builder.io/qwik';
+import { useStore, useVisibleTask$, $ } from '@builder.io/qwik';
 import { onIdTokenChanged, User } from 'firebase/auth';
 import { auth, loginWithGoogle, logout } from './firebase';
 
@@ -42,7 +42,7 @@ export function useUser() {
 
     return {
         ..._store,
-        loginWithGoogle: loginWithGoogle,
-        logout: logout
+        loginWithGoogle: $(async () => await loginWithGoogle()),
+        logout: $(async () => await logout())
     };
 };
