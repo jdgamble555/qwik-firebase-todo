@@ -1,12 +1,12 @@
-import { initializeApp } from '@firebase/app';
+import { initializeApp } from 'firebase/app';
 import {
     getAuth,
     GoogleAuthProvider,
     signInWithPopup,
     signOut
-} from '@firebase/auth';
+} from 'firebase/auth';
 
-import { getFirestore } from '@firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 
 // normally you should put this in your .env file
 const firebase_config = {
@@ -25,12 +25,7 @@ const firebaseApp = initializeApp(firebase_config);
 
 export const auth = getAuth();
 
-export const loginWithGoogle = async () => {
-    if (typeof window !== 'undefined') {
-        return await signInWithPopup(auth, new GoogleAuthProvider());
-    }
-    return;
-};
+export const loginWithGoogle = async () => await signInWithPopup(auth, new GoogleAuthProvider());
 export const logout = async () => await signOut(auth);
 
 // firestore
