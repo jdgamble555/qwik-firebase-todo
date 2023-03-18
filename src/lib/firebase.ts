@@ -2,11 +2,10 @@ import { initializeApp } from 'firebase/app';
 import {
     getAuth,
     GoogleAuthProvider,
-    signInWithPopup,
     signOut
 } from 'firebase/auth';
-
 import { getFirestore } from 'firebase/firestore';
+import { signInWithPopup } from '@firebase/auth';
 
 // normally you should put this in your .env file
 const firebase_config = {
