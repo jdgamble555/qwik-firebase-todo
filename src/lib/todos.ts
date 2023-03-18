@@ -11,7 +11,7 @@ import {
     updateDoc,
     where
 } from 'firebase/firestore';
-import { useClientEffect$, useStore } from '@builder.io/qwik';
+import { useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { userData } from './user';
 import { db } from './firebase';
 
@@ -26,7 +26,7 @@ export interface TodoItem {
 export function useTodos(user: userData) {
     const _store = useStore<{ todos: TodoItem[], loading: boolean }>({ todos: [], loading: true });
 
-    useClientEffect$(() => {
+    useVisibleTask$(() => {
         _store.loading = true;
         const unsubscribe = onSnapshot<TodoItem[]>(
 

@@ -1,4 +1,4 @@
-import { useClientEffect$, useStore } from '@builder.io/qwik';
+import { useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { onIdTokenChanged, User } from 'firebase/auth';
 import { auth } from './firebase';
 
@@ -12,7 +12,7 @@ export interface userData {
 export function useUser() {
     const _store = useStore<{ loading: boolean, user: userData | null }>({ loading: true, user: null });
 
-    useClientEffect$(() => {
+    useVisibleTask$(() => {
 
         // toggle loading
         _store.loading = true;

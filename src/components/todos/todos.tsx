@@ -1,3 +1,4 @@
+import type { QwikSubmitEvent} from "@builder.io/qwik";
 import { component$, useStyles$ } from "@builder.io/qwik";
 import { type TodoItem, useTodos, updateTodo, deleteTodo, addTodo } from "~/lib/todos";
 import type { userData } from "~/lib/user";
@@ -32,7 +33,7 @@ export const Todo = ({ todo }: { todo: TodoItem, key: string }) => {
 };
 
 // todo add event
-export const addTodoSubmit = (e: Event, uid: string) => {
+export const addTodoSubmit = (e: QwikSubmitEvent, uid: string) => {
 
     // get and reset form
     const target = e.target as HTMLFormElement;
