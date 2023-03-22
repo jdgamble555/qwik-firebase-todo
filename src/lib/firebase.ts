@@ -25,7 +25,7 @@ export const auth = getAuth();
 
 export const loginWithGoogle = async () => {
     const signInWithPopup = (await import('firebase/auth')).signInWithPopup;
-    return signInWithPopup(getAuth(), new GoogleAuthProvider());
+    return signInWithPopup(auth, new GoogleAuthProvider());
 };
 export const logout = async () => await signOut(auth);
 
