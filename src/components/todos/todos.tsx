@@ -33,10 +33,10 @@ export const Todo = ({ todo }: { todo: TodoItem, key: string }) => {
 };
 
 // todo add event
-export const addTodoSubmit = (e: QwikSubmitEvent, uid: string) => {
+export const addTodoSubmit = (e: QwikSubmitEvent<HTMLFormElement> | FormData, uid: string) => {
 
     // get and reset form
-    const target = e.target as HTMLFormElement;
+    const target = (e as any).target as HTMLFormElement;
     const form = new FormData(target);
     const { task } = Object.fromEntries(form) as Record<string, string>;
 
