@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import {
     getAuth,
-    GoogleAuthProvider,
     signOut
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
@@ -23,10 +22,13 @@ const firebaseApp = initializeApp(firebase_config);
 
 export const auth = getAuth();
 
-export const loginWithGoogle = async () => {
+/*export const loginWithGoogle = async () => {
     const signInWithPopup = (await import('firebase/auth')).signInWithPopup;
     return signInWithPopup(auth, new GoogleAuthProvider());
-};
+};*/
+
+
+
 export const logout = async () => await signOut(auth);
 
 // firestore

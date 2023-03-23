@@ -1,6 +1,8 @@
 import { component$ } from '@builder.io/qwik';
 import type { DocumentHead } from '@builder.io/qwik-city';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import Profile from '~/components/profile';
+import { auth } from '~/lib/firebase';
 import { useUser } from '~/lib/user';
 
 export default component$(() => {
@@ -21,9 +23,7 @@ export const Loading = () => {
 
 export const Login = () => {
 
-  const { loginWithGoogle } = useUser();
-
-  return <button onClick$={() => loginWithGoogle()}>Signin with Google</button>
+  return <button onClick$={async () => await signInWithPopup(auth, new GoogleAuthProvider())}>Signin with Google</button>
 };
 
 

@@ -1,6 +1,6 @@
 import { useStore, useVisibleTask$, $ } from '@builder.io/qwik';
 import { onIdTokenChanged, User } from 'firebase/auth';
-import { auth, loginWithGoogle, logout } from './firebase';
+import { auth, logout } from './firebase';
 
 export interface userData {
     photoURL: string | null;
@@ -42,7 +42,6 @@ export function useUser() {
 
     return {
         ..._store,
-        loginWithGoogle: $(async () => await loginWithGoogle()),
         logout: $(async () => await logout())
     };
 };
