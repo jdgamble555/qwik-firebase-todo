@@ -1,8 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import {
-    getAuth,
-    signOut
-} from 'firebase/auth';
+import { getAuth, signOut } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 // normally you should put this in your .env file
@@ -20,8 +17,6 @@ const firebase_config = {
 
 const firebaseApp = initializeApp(firebase_config);
 
-export const auth = getAuth();
-
 /*export const loginWithGoogle = async () => {
     const signInWithPopup = (await import('firebase/auth')).signInWithPopup;
     return signInWithPopup(auth, new GoogleAuthProvider());
@@ -29,7 +24,7 @@ export const auth = getAuth();
 
 
 
-export const logout = async () => await signOut(auth);
+export const logout = async () => await signOut(getAuth());
 
 // firestore
 
