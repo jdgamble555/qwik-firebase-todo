@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
+import { $ } from '@builder.io/qwik';
 import { CompleteFn, ErrorFn, NextOrObserver, User } from 'firebase/auth';
 import { GoogleAuthProvider, onIdTokenChanged, signOut } from 'firebase/auth';
 
@@ -20,14 +21,16 @@ const firebaseApp = initializeApp(firebase_config);
 
 // firebase auth
 
-// rollup bug, so have to dynamically import 'signInWithPopup' and 'getAuth()' from 'firebase/auth'
+/* rollup bug, so have to dynamically import 'signInWithPopup' and 'getAuth()' from 'firebase/auth'
+ * also needed to serialize 'signInWithPopup' but not other functions for some reason? 🤷
+*/
 
 const auth = async () => (await import('firebase/auth')).getAuth(firebaseApp);
 
-export const signInWithGoogle = async () => {
+export const signInWithGoogle = $(async () => {
     const _auth = await auth();
     return (await import('firebase/auth')).signInWithPopup(_auth, new GoogleAuthProvider());
-};
+});
 
 export const onAuthChange = async (
     nextOrObserver: NextOrObserver<User>,
