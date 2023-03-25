@@ -16,7 +16,7 @@ const firebase_config = {
 
 // initialize and login
 
-const firebaseApp = initializeApp(firebase_config);
+export const firebaseApp = initializeApp(firebase_config);
 
 export const auth = FB.getAuth(firebaseApp);
 
