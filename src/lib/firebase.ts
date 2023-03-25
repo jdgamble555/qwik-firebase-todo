@@ -20,20 +20,20 @@ const firebase_config = {
 
 export const firebaseApp = initializeApp(firebase_config);
 
-export const auth2 = getAuth(firebaseApp);
+export const auth = getAuth(firebaseApp);
 
 export const onAuthChange = $(async (
     nextOrObserver: NextOrObserver<User>,
     error?: ErrorFn | undefined,
     completed?: CompleteFn | undefined
 ) => {
-  return onIdTokenChanged(auth2, nextOrObserver, error, completed);
-
+    console.log(auth);
+    return onIdTokenChanged(auth, nextOrObserver, error, completed);
 });
 
-export const signInWithGoogle = $(async () => (await import('firebase/auth')).signInWithPopup(auth2, new GoogleAuthProvider()));
+export const signInWithGoogle = $(async () => (await import('firebase/auth')).signInWithPopup(auth, new GoogleAuthProvider()));
 
-export const logout = async () => await signOut(auth2);
+export const logout = async () => await signOut(auth);
 
 // firestore
 
