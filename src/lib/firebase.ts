@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, onIdTokenChanged, signOut } from 'firebase/auth';
+//import { getAuth, GoogleAuthProvider,  signOut } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { $ } from '@builder.io/qwik';
 import type { CompleteFn, ErrorFn, NextOrObserver, User } from 'firebase/auth';
@@ -20,7 +20,7 @@ const firebase_config = {
 
 export const firebaseApp = initializeApp(firebase_config);
 
-export const auth = getAuth(firebaseApp);
+//export const auth = getAuth(firebaseApp);
 
 export const onAuthChange = $(async (
     nextOrObserver: NextOrObserver<User>,
@@ -29,12 +29,17 @@ export const onAuthChange = $(async (
 ) => {
     const _firebaseApp = (await import('firebase/app')).initializeApp(firebase_config);
     const _auth = (await import('firebase/auth')).getAuth(_firebaseApp);
-    return onIdTokenChanged(_auth, nextOrObserver, error, completed);
+    const _onIdTokenChanged = (await import('firebase/auth')).onIdTokenChanged;
+    return _onIdTokenChanged(_auth, nextOrObserver, error, completed);
 });
 
-export const signInWithGoogle = $(async () => (await import('firebase/auth')).signInWithPopup(auth, new GoogleAuthProvider()));
+//export const signInWithGoogle = $(async () => (await import('firebase/auth')).signInWithPopup(auth, new GoogleAuthProvider()));
 
-export const logout = async () => await signOut(auth);
+export const signInWithGoogle = $(async () => {});
+
+//export const logout = async () => await signOut(auth);
+
+export const logout = async () => {};
 
 // firestore
 
