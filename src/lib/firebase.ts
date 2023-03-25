@@ -1,7 +1,9 @@
 import { initializeApp } from 'firebase/app';
-import * as FB from 'firebase/auth';
+//import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import * as Auth from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { $ } from '@builder.io/qwik';
+import type { User } from 'firebase/auth';
 
 // normally you should put this in your .env file
 const firebase_config = {
@@ -18,11 +20,17 @@ const firebase_config = {
 
 export const firebaseApp = initializeApp(firebase_config);
 
-export const auth = FB.getAuth(firebaseApp);
+export const auth = Auth.getAuth(firebaseApp);
 
-export const signInWithGoogle = $(async () => await FB.signInWithPopup(auth, new FB.GoogleAuthProvider()));
+export const onAuthChange = (
+    nextOrObserver: Auth.NextOrObserver<Auth.User>,
+    error?: Auth.ErrorFn | undefined,
+    completed?: Auth.CompleteFn | undefined
+) => Auth.onIdTokenChanged(auth, nextOrObserver, error, completed);
 
-export const logout = async () => await FB.signOut(auth);
+export const signInWithGoogle = $(async () => await Auth.signInWithPopup(auth, new Auth.GoogleAuthProvider()));
+
+export const logout = $(async () => await Auth.signOut(auth));
 
 // firestore
 

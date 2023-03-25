@@ -1,6 +1,6 @@
 import { useStore, useVisibleTask$, $ } from '@builder.io/qwik';
-import { onIdTokenChanged, User } from 'firebase/auth';
-import { auth, logout } from './firebase';
+import type { User } from 'firebase/auth';
+import { logout, onAuthChange } from './firebase';
 
 export interface userData {
     photoURL: string | null;
@@ -18,7 +18,7 @@ export function useUser() {
         _store.loading = true;
 
         // subscribe to user changes
-        const unsubscribe = onIdTokenChanged(auth, (_user: User | null) => {
+        const unsubscribe = onAuthChange((_user: User | null) => {
             _store.loading = false;
             if (!_user) {
                 _store.user = null;
