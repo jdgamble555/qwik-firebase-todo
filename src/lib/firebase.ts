@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, signOut } from 'firebase/auth';
+import * as FB from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import { $ } from '@builder.io/qwik';
 
 // normally you should put this in your .env file
 const firebase_config = {
@@ -17,14 +18,11 @@ const firebase_config = {
 
 const firebaseApp = initializeApp(firebase_config);
 
-/*export const loginWithGoogle = async () => {
-    const signInWithPopup = (await import('firebase/auth')).signInWithPopup;
-    return signInWithPopup(auth, new GoogleAuthProvider());
-};*/
+export const auth = FB.getAuth(firebaseApp);
 
+export const signInWithGoogle = $(async () => await FB.signInWithPopup(auth, new FB.GoogleAuthProvider()));
 
-
-export const logout = async () => await signOut(getAuth());
+export const logout = async () => await FB.signOut(auth);
 
 // firestore
 
