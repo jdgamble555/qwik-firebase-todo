@@ -1,9 +1,8 @@
 import { FirebaseApp, initializeApp } from 'firebase/app';
-//import { getAuth, GoogleAuthProvider,  signOut } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { $ } from '@builder.io/qwik';
-import { CompleteFn, ErrorFn, NextOrObserver, onIdTokenChanged, signOut, User } from 'firebase/auth';
-//import { signInWithPopup } from 'firebase/auth';
+import type { CompleteFn, ErrorFn, NextOrObserver, User } from 'firebase/auth';
+import { onIdTokenChanged, signOut } from 'firebase/auth';
 
 // normally you should put this in your .env file
 const firebase_config = {
@@ -18,11 +17,9 @@ const firebase_config = {
 
 // initialize and login
 
-export const firebaseApp = initializeApp(firebase_config);
+const firebaseApp = initializeApp(firebase_config);
 
-//export const auth = getAuth(firebaseApp);
-
-const auth = $(async (_firebaseApp: FirebaseApp) => (await import('firebase/auth')).getAuth(_firebaseApp));
+const auth = async (_firebaseApp: FirebaseApp) => (await import('firebase/auth')).getAuth(_firebaseApp);
 
 export const onAuthChange = $(async (
     nextOrObserver: NextOrObserver<User>,
@@ -30,7 +27,6 @@ export const onAuthChange = $(async (
     completed?: CompleteFn | undefined
 ) => {
     const _auth = await auth(firebaseApp);
-    //const _onIdTokenChanged = (await import('firebase/auth')).onIdTokenChanged;
     return onIdTokenChanged(_auth, nextOrObserver, error, completed);
 });
 
