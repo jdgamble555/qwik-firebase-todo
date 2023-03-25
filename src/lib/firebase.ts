@@ -1,9 +1,9 @@
 import { initializeApp } from 'firebase/app';
-//import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-import * as Auth from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, onIdTokenChanged, signOut } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { $ } from '@builder.io/qwik';
-import type { User } from 'firebase/auth';
+import type { CompleteFn, ErrorFn, NextOrObserver, User } from 'firebase/auth';
+//import { signInWithPopup } from 'firebase/auth';
 
 // normally you should put this in your .env file
 const firebase_config = {
@@ -20,17 +20,17 @@ const firebase_config = {
 
 export const firebaseApp = initializeApp(firebase_config);
 
-export const auth = Auth.getAuth(firebaseApp);
+export const auth = getAuth(firebaseApp);
 
-export const onAuthChange = (
-    nextOrObserver: Auth.NextOrObserver<Auth.User>,
-    error?: Auth.ErrorFn | undefined,
-    completed?: Auth.CompleteFn | undefined
-) => Auth.onIdTokenChanged(auth, nextOrObserver, error, completed);
+export const onAuthChange = async (
+    nextOrObserver: NextOrObserver<User>,
+    error?: ErrorFn | undefined,
+    completed?: CompleteFn | undefined
+) => onIdTokenChanged(auth, nextOrObserver, error, completed);
 
-export const signInWithGoogle = $(async () => await Auth.signInWithPopup(auth, new Auth.GoogleAuthProvider()));
+export const signInWithGoogle = $(async () => (await import('firebase/auth')).signInWithPopup(auth, new GoogleAuthProvider()));
 
-export const logout = $(async () => await Auth.signOut(auth));
+export const logout = async () => await signOut(auth);
 
 // firestore
 
