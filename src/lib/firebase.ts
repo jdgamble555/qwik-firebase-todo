@@ -22,11 +22,15 @@ export const firebaseApp = initializeApp(firebase_config);
 
 export const auth = getAuth(firebaseApp);
 
-export const onAuthChange = async (
+export const onAuthChange = $(async (
     nextOrObserver: NextOrObserver<User>,
     error?: ErrorFn | undefined,
     completed?: CompleteFn | undefined
-) => onIdTokenChanged(auth, nextOrObserver, error, completed);
+) => {
+    console.log(auth);
+  return onIdTokenChanged(auth, nextOrObserver, error, completed);
+
+});
 
 export const signInWithGoogle = $(async () => (await import('firebase/auth')).signInWithPopup(auth, new GoogleAuthProvider()));
 
