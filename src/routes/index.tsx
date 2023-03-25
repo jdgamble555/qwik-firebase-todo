@@ -6,12 +6,10 @@ import { useUser } from '~/lib/user';
 
 export default component$(() => {
   const { user, loading } = useUser();
-
   return (
     <center>
       <h1>Qwik Firebase Todo App</h1>
-
-      {loading ? <Loading /> : user ? <Profile {...{ user }} /> : <Login />}
+      {loading ? <Loading /> : user ? <Profile {...user} /> : <Login />}
     </center>
   );
 });
@@ -21,17 +19,15 @@ export const Loading = () => {
 };
 
 export const Login = () => {
-
   return <button onClick$={signInWithGoogle}>Signin with Google</button>
 };
-
 
 export const head: DocumentHead = {
   title: 'Qwik Firebase Todo App',
   meta: [
     {
       name: 'description',
-      content: 'Qwik site description'
+      content: 'Qwik Firebase Todo App'
     },
   ],
 };

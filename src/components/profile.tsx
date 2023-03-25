@@ -1,11 +1,9 @@
 import { component$ } from '@builder.io/qwik';
+import { logout } from '~/lib/firebase';
 import type { userData } from '~/lib/user';
-import { useUser } from '~/lib/user';
 import Todos from './todos/todos';
 
-export default component$(({ user }: { user: userData }) => {
-
-    const { logout } = useUser();
+export default component$((user: userData) => {
 
     return (
         <>

@@ -15,21 +15,24 @@ const firebase_config = {
     measurementId: "G-FKRCW93P0X"
 };
 
-// initialize and login
+// initialize firebase
 
 const firebaseApp = initializeApp(firebase_config);
 
 // firebase auth
 
-/* rollup bug, so have to dynamically import 'signInWithPopup' and 'getAuth()' from 'firebase/auth'
- * also needed to serialize 'signInWithPopup' but not other functions for some reason? 🤷
-*/
+/* rollup bug, so have to dynamically import 'signInWithPopup' and 'getAuth()' from 'firebase/auth' */
 
 const auth = async () => (await import('firebase/auth')).getAuth(firebaseApp);
 
 export const signInWithGoogle = $(async () => {
     const _auth = await auth();
     return (await import('firebase/auth')).signInWithPopup(_auth, new GoogleAuthProvider());
+});
+
+export const logout = $(async () => {
+    const _auth = await auth();
+    await signOut(_auth);
 });
 
 export const onAuthChange = async (
@@ -39,11 +42,6 @@ export const onAuthChange = async (
 ) => {
     const _auth = await auth();
     return onIdTokenChanged(_auth, nextOrObserver, error, completed);
-};
-
-export const logout = async () => {
-    const _auth = await auth();
-    await signOut(_auth);
 };
 
 // firestore

@@ -1,6 +1,6 @@
-import { useStore, useVisibleTask$, $ } from '@builder.io/qwik';
+import { useStore, useVisibleTask$ } from '@builder.io/qwik';
 import type { User } from 'firebase/auth';
-import { logout, onAuthChange } from './firebase';
+import { onAuthChange } from './firebase';
 
 export interface userData {
     photoURL: string | null;
@@ -40,8 +40,5 @@ export function useUser() {
         return unsubscribe;
     });
 
-    return {
-        ..._store,
-        logout: $(async () => await logout())
-    };
+    return _store;
 };
