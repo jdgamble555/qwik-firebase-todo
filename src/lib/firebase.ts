@@ -2,7 +2,7 @@ import { initializeApp } from 'firebase/app';
 //import { getAuth, GoogleAuthProvider,  signOut } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { $ } from '@builder.io/qwik';
-import type { CompleteFn, ErrorFn, NextOrObserver, User } from 'firebase/auth';
+import { CompleteFn, ErrorFn, getAuth, NextOrObserver, signOut, User } from 'firebase/auth';
 //import { signInWithPopup } from 'firebase/auth';
 
 // normally you should put this in your .env file
@@ -20,7 +20,7 @@ const firebase_config = {
 
 export const firebaseApp = initializeApp(firebase_config);
 
-//export const auth = getAuth(firebaseApp);
+export const auth = getAuth(firebaseApp);
 
 export const onAuthChange = $(async (
     nextOrObserver: NextOrObserver<User>,
@@ -37,9 +37,9 @@ export const onAuthChange = $(async (
 
 export const signInWithGoogle = $(async () => {});
 
-//export const logout = async () => await signOut(auth);
+export const logout = async () => await signOut(auth);
 
-export const logout = async () => {};
+//export const logout = async () => {};
 
 // firestore
 
