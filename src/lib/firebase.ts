@@ -21,9 +21,10 @@ const firebaseApp = initializeApp(firebase_config);
 
 // firebase auth
 
-/* rollup bug, so have to dynamically import 'signInWithPopup' and 'getAuth()' from 'firebase/auth' */
+/* can't import firebase auth on server, import dynamically in browser */
 
 const auth = async () => (await import('firebase/auth')).getAuth(firebaseApp);
+
 
 export const signInWithGoogle = $(async () => {
     const _auth = await auth();
