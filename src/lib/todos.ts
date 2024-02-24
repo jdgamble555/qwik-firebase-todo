@@ -13,7 +13,7 @@ import {
 } from 'firebase/firestore';
 import { useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { userData } from './user';
-import { db } from './firebase';
+import { auth, db } from './firebase';
 
 export interface TodoItem {
     id: string;
@@ -24,14 +24,22 @@ export interface TodoItem {
 };
 
 export function useTodos(user: userData) {
-    const _store = useStore<{ todos: TodoItem[], loading: boolean }>({ todos: [], loading: true });
+
+    const _store = useStore<{
+        todos: TodoItem[],
+        loading: boolean
+    }>({
+        todos: [],
+        loading: true
+    });
 
     useVisibleTask$(() => {
+        
         _store.loading = true;
-        const unsubscribe = onSnapshot<TodoItem[]>(
+        const unsubscribe = onSnapshot(
 
             // query realtime todo list
-            query<TodoItem[]>(
+            query(
                 collection(db, 'todos') as CollectionReference<TodoItem[]>,
                 where('uid', '==', user.uid),
                 orderBy('created')
@@ -77,6 +85,7 @@ export function useTodos(user: userData) {
                 _store.todos = data;
 
             });
+
         return unsubscribe;
     });
 
@@ -84,7 +93,14 @@ export function useTodos(user: userData) {
 };
 
 
-export const addTodo = (uid: string, text: string) => {
+export const addTodo = (text: string) => {
+    
+    const uid = auth.currentUser?.uid;
+
+    if (!uid) {
+        throw 'Must be logged in!';
+    }
+
     addDoc(collection(db, 'todos'), {
         uid,
         text,
@@ -93,8 +109,10 @@ export const addTodo = (uid: string, text: string) => {
     });
 }
 
-export const updateTodo = (id: string, newStatus: boolean) => {
-    updateDoc(doc(db, 'todos', id), { complete: newStatus });
+export const updateTodo = (id: string, complete: boolean) => {
+
+    updateDoc(doc(db, 'todos', id), { complete });
+
 }
 
 export const deleteTodo = (id: string) => {

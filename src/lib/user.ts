@@ -1,6 +1,12 @@
-import { useStore, useVisibleTask$ } from '@builder.io/qwik';
-import type { User } from 'firebase/auth';
-import { onAuthChange } from './firebase';
+import { useStore, useVisibleTask$, $ } from '@builder.io/qwik';
+import {
+    GoogleAuthProvider,
+    onIdTokenChanged,
+    signInWithPopup,
+    signOut,
+    type User
+} from 'firebase/auth';
+import { auth } from './firebase';
 
 export interface userData {
     photoURL: string | null;
@@ -8,6 +14,12 @@ export interface userData {
     displayName: string | null;
     email: string | null;
 };
+
+export const loginWithGoogle = $(
+    () => signInWithPopup(auth, new GoogleAuthProvider())
+);
+
+export const logout = $(() => signOut(auth));
 
 export function useUser() {
     const _store = useStore<{ loading: boolean, user: userData | null }>({ loading: true, user: null });
@@ -18,7 +30,7 @@ export function useUser() {
         _store.loading = true;
 
         // subscribe to user changes
-        const unsubscribe = onAuthChange((_user: User | null) => {
+        const unsubscribe = onIdTokenChanged(auth, (_user: User | null) => {
             _store.loading = false;
             if (!_user) {
                 _store.user = null;

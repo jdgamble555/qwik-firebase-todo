@@ -1,8 +1,7 @@
-import { initializeApp } from 'firebase/app';
+import { getApps, initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { $ } from '@builder.io/qwik';
-import { CompleteFn, ErrorFn, NextOrObserver, User } from 'firebase/auth';
-import { GoogleAuthProvider, onIdTokenChanged, signOut } from 'firebase/auth';
+
 
 // normally you should put this in your .env file
 const firebase_config = {
@@ -17,33 +16,9 @@ const firebase_config = {
 
 // initialize firebase
 
-const firebaseApp = initializeApp(firebase_config);
+if (!getApps().length) {
+    initializeApp(firebase_config);
+}
 
-// firebase auth
-
-/* can't import firebase auth on server, import dynamically in browser */
-
-const auth = async () => (await import('firebase/auth')).getAuth(firebaseApp);
-
-
-export const signInWithGoogle = $(async () => {
-    const _auth = await auth();
-    return (await import('firebase/auth')).signInWithPopup(_auth, new GoogleAuthProvider());
-});
-
-export const logout = $(async () => {
-    const _auth = await auth();
-    await signOut(_auth);
-});
-
-export const onAuthChange = async (
-    nextOrObserver: NextOrObserver<User>,
-    error?: ErrorFn | undefined,
-    completed?: CompleteFn | undefined
-) => {
-    const _auth = await auth();
-    return onIdTokenChanged(_auth, nextOrObserver, error, completed);
-};
-
-// firestore
-export const db = getFirestore(firebaseApp);
+export const auth = getAuth();
+export const db = getFirestore();
