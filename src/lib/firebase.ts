@@ -1,4 +1,5 @@
-import { getApps, initializeApp } from 'firebase/app';
+import { getApp, getApps, initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 // normally you should put this in your .env file
@@ -14,12 +15,9 @@ const firebase_config = {
 
 // initialize firebase
 
-if (!getApps().length) {
-    initializeApp(firebase_config);
-}
+const app = getApps().length ? getApp() : initializeApp(firebase_config);
 
-export const db = getFirestore();
+export const db = getFirestore(app);
 
 // load auth on browser only
-export const auth = (await import('firebase/auth')).getAuth();
-export const signInWithWindow = (await import('firebase/auth')).signInWithPopup;
+export const auth = getAuth(app);

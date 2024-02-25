@@ -1,11 +1,11 @@
 import { useStore, useVisibleTask$, $ } from '@builder.io/qwik';
 import {
-    GoogleAuthProvider,
+    //GoogleAuthProvider,
     onIdTokenChanged,
     signOut,
     type User
 } from 'firebase/auth';
-import { auth, signInWithWindow } from './firebase';
+import { auth } from './firebase';
 
 export interface userData {
     photoURL: string | null;
@@ -14,18 +14,19 @@ export interface userData {
     email: string | null;
 };
 
-export const loginWithGoogle = $(() => {
-    signInWithWindow(auth, new GoogleAuthProvider());
+export const loginWithGoogle = $(async () => {
+    //const signIn = await signInWithWindow();
+    //await signIn(await auth(), new GoogleAuthProvider());
 });
 
-export const logout = $(() => {
+export const logout = $(async () => {
     signOut(auth);
 });
 
 export function useUser() {
     const _store = useStore<{ loading: boolean, user: userData | null }>({ loading: true, user: null });
 
-    useVisibleTask$(() => {
+    useVisibleTask$(async () => {
 
         if (auth) {
 
