@@ -93,14 +93,7 @@ export function useTodos(user: userData) {
 };
 
 
-export const addTodo = (text: string) => {
-
-    //const uid = auth.currentUser?.uid;
-
-    const uid = '222'
-    if (!uid) {
-        throw 'Must be logged in!';
-    }
+export const addTodo = (text: string, uid: string) => {
 
     addDoc(collection(db, 'todos'), {
         uid,

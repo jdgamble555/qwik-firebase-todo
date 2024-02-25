@@ -1,6 +1,6 @@
 import { component$ } from "@builder.io/qwik";
 import { type TodoItem, useTodos, updateTodo, deleteTodo, addTodo } from "~/lib/todos";
-import type { userData } from "~/lib/user";
+import { useUser, type userData } from "~/lib/user";
 
 // todo component
 export default component$((user: userData) => {
@@ -36,20 +36,24 @@ export const Todo = ({ todo }: { todo: TodoItem, key: string }) => {
 // todo add event
 export const addTodoSubmit = (e: SubmitEvent) => {
 
-    // get and reset form
-    const target = e.target as HTMLFormElement;
-    const form = new FormData(target);
-    const { task } = Object.fromEntries(form);
+    const { user } = useUser();
 
-    if (typeof task !== 'string') {
-        return;
+    if (user) {
+        // get and reset form
+        const target = e.target as HTMLFormElement;
+        const form = new FormData(target);
+        const { task } = Object.fromEntries(form);
+
+        if (typeof task !== 'string') {
+            return;
+        }
+
+        // reset form
+        target.reset();
+
+        // add todo
+        addTodo(task, user.uid);
     }
-
-    // reset form
-    target.reset();
-
-    // add todo
-    addTodo(task);
 };
 
 // todo form
