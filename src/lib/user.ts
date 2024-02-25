@@ -1,7 +1,7 @@
 import { useStore, useVisibleTask$, $ } from '@builder.io/qwik';
 import {
     //GoogleAuthProvider,
-    onIdTokenChanged,
+    //onIdTokenChanged,
     signOut,
     type User
 } from 'firebase/auth';
@@ -28,7 +28,7 @@ export function useUser() {
 
     useVisibleTask$(async () => {
 
-        if (auth) {
+       /* if (auth) {
 
             // toggle loading
             _store.loading = true;
@@ -54,7 +54,7 @@ export function useUser() {
                 _store.user = data;
             });
             return unsubscribe;
-        }
+        }*/
     });
 
     return _store;
