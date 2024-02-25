@@ -93,11 +93,23 @@ export function useTodos(user: userData) {
 };
 
 
-export const addTodo = (text: string, uid: string) => {
+export const addTodo = (e: SubmitEvent, uid: string) => {
+
+    // get and reset form
+    const target = e.target as HTMLFormElement;
+    const form = new FormData(target);
+    const { task } = Object.fromEntries(form);
+
+    if (typeof task !== 'string') {
+        return;
+    }
+
+    // reset form
+    target.reset();
 
     addDoc(collection(db, 'todos'), {
         uid,
-        text,
+        text: task,
         complete: false,
         created: serverTimestamp()
     });
