@@ -8,7 +8,7 @@ export default component$(() => {
 
     const user = useUser();
 
-    if (!user.value) {
+    if (!user.data) {
         return;
     }
 
@@ -22,7 +22,7 @@ export default component$(() => {
                     : <p><b>Add your first todo item!</b></p>
                 }
             </div>
-            <TodoForm {...user.value} />
+            <TodoForm {...user.data} />
         </div>
     );
 });

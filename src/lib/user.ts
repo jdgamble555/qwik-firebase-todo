@@ -1,4 +1,4 @@
-import { useStore, useVisibleTask$, $, useSignal } from '@builder.io/qwik';
+import { useStore, $, useVisibleTask$ } from '@builder.io/qwik';
 import {
     GoogleAuthProvider,
     onIdTokenChanged,
@@ -28,19 +28,33 @@ export const logout = $(() => {
 
 export function useUser() {
 
-    const _signal = useSignal<userData | null>(null);
+    const _store = useStore<{
+        loading: boolean,
+        data: userData | null
+    }>({
+        loading: true,
+        data: null
+    });
 
     useVisibleTask$(() => {
 
+        // toggle loading
+        _store.loading = true;
+
+        // server environment
         if (!auth) {
-            _signal.value = null;
+            _store.loading = false;
+            _store.data = null;
             return;
         }
 
         // subscribe to user changes
         return onIdTokenChanged(auth, (_user: User | null) => {
+
+            _store.loading = false;
+
             if (!_user) {
-                _signal.value = null;
+                _store.data = null;
                 return;
             }
 
@@ -54,10 +68,10 @@ export function useUser() {
             }
 
             // set store
-            _signal.value = data;
+            _store.data = data;
         });
 
     });
 
-    return _signal;
+    return _store;
 };

@@ -11,7 +11,7 @@ import {
     updateDoc,
     where
 } from 'firebase/firestore';
-import { useComputed$, useStore, useTask$, useVisibleTask$ } from '@builder.io/qwik';
+import { useStore, useTask$ } from '@builder.io/qwik';
 import { useUser } from './user';
 import { db } from './firebase';
 
@@ -35,11 +35,13 @@ export function useTodos(user: ReturnType<typeof useUser>) {
 
     useTask$(({ track }) => {
 
-        track(() => user.value);
+        track(() => user.data);
 
         _store.loading = true;
 
-        if (!user.value) {
+        if (!user.data) {
+            _store.loading = false;
+            _store.todos = [];
             return;
         }
 
@@ -48,7 +50,7 @@ export function useTodos(user: ReturnType<typeof useUser>) {
             // query realtime todo list
             query(
                 collection(db, 'todos') as CollectionReference<TodoItem[]>,
-                where('uid', '==', user.value.uid),
+                where('uid', '==', user.data.uid),
                 orderBy('created')
             ), (q) => {
 
