@@ -37,13 +37,16 @@ export function useTodos(user: ReturnType<typeof useUser>) {
 
         track(() => user.value);
 
+        let unsubscribe: () => void = () => {};
+
         _store.loading = true;
 
         if (!user.value) {
+            cleanup(unsubscribe);
             return;
         }
 
-        const unsubscribe = onSnapshot(
+        unsubscribe = onSnapshot(
 
             // query realtime todo list
             query(
