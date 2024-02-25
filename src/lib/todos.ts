@@ -13,7 +13,7 @@ import {
 } from 'firebase/firestore';
 import { useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { userData } from './user';
-import { auth, db } from './firebase';
+import { db } from './firebase';
 
 export interface TodoItem {
     id: string;

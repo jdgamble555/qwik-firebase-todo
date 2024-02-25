@@ -1,11 +1,11 @@
 import { useStore, useVisibleTask$, $ } from '@builder.io/qwik';
-import {
+/*import {
     //GoogleAuthProvider,
     //onIdTokenChanged,
     signOut,
     type User
 } from 'firebase/auth';
-import { auth } from './firebase';
+import { auth } from './firebase';*/
 
 export interface userData {
     photoURL: string | null;
@@ -20,7 +20,7 @@ export const loginWithGoogle = $(async () => {
 });
 
 export const logout = $(async () => {
-    signOut(auth);
+    //signOut(auth);
 });
 
 export function useUser() {
