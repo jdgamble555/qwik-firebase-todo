@@ -34,7 +34,7 @@ export function useTodos(user: userData) {
     });
 
     useVisibleTask$(() => {
-        
+
         _store.loading = true;
         const unsubscribe = onSnapshot(
 
@@ -94,19 +94,22 @@ export function useTodos(user: userData) {
 
 
 export const addTodo = (text: string) => {
-    
-    const uid = auth.currentUser?.uid;
 
-    if (!uid) {
-        throw 'Must be logged in!';
+    if (auth) {
+        const uid = auth.currentUser?.uid;
+
+        if (!uid) {
+            throw 'Must be logged in!';
+        }
+
+        addDoc(collection(db, 'todos'), {
+            uid,
+            text,
+            complete: false,
+            created: serverTimestamp()
+        });
     }
 
-    addDoc(collection(db, 'todos'), {
-        uid,
-        text,
-        complete: false,
-        created: serverTimestamp()
-    });
 }
 
 export const updateTodo = (id: string, complete: boolean) => {
