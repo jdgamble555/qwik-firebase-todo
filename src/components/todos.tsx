@@ -1,10 +1,16 @@
 import { component$ } from "@builder.io/qwik";
 import { useTodos, addTodo } from "~/lib/todos";
-import { type userData } from "~/lib/user";
+import { useUser, type userData } from "~/lib/user";
 import { Todo } from "./todo-item";
 
 // todo component
-export default component$((user: userData) => {
+export default component$(() => {
+
+    const user = useUser();
+
+    if (!user.data) {
+        return;
+    }
 
     const { todos } = useTodos(user);
 
@@ -16,7 +22,7 @@ export default component$((user: userData) => {
                     : <p><b>Add your first todo item!</b></p>
                 }
             </div>
-            <TodoForm {...user} />
+            <TodoForm {...user.data} />
         </div>
     );
 });

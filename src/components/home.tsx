@@ -5,12 +5,12 @@ import { Loading, Login } from "./helpers";
 
 export default component$(() => {
 
-  const { user, loading } = useUser();
+  const user = useUser();
 
   return (
     <div class="text-center">
       <h1 class="text-3xl font-semibold my-3">Qwik Firebase Todo App</h1>
-      {loading ? <Loading /> : user ? <Profile {...user} /> : <Login />}
+      {user.loading ? <Loading /> : user.data ? <Profile /> : <Login />}
     </div>
   );
 });

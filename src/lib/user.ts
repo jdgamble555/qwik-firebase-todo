@@ -27,7 +27,8 @@ export const logout = $(() => {
 });
 
 export function useUser() {
-    const _store = useStore<{ loading: boolean, user: userData | null }>({ loading: true, user: null });
+
+    const _store = useStore<{ loading: boolean, data: userData | null }>({ loading: true, data: null });
 
     useVisibleTask$(() => {
 
@@ -37,10 +38,10 @@ export function useUser() {
             _store.loading = true;
 
             // subscribe to user changes
-            const unsubscribe = onIdTokenChanged(auth, (_user: User | null) => {
+            return onIdTokenChanged(auth, (_user: User | null) => {
                 _store.loading = false;
                 if (!_user) {
-                    _store.user = null;
+                    _store.data = null;
                     return;
                 }
 
@@ -54,9 +55,8 @@ export function useUser() {
                 }
 
                 // set store
-                _store.user = data;
+                _store.data = data;
             });
-            return unsubscribe;
         }
     });
 

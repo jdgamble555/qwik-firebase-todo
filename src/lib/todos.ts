@@ -12,7 +12,7 @@ import {
     where
 } from 'firebase/firestore';
 import { useStore, useVisibleTask$ } from '@builder.io/qwik';
-import { userData } from './user';
+import { useUser } from './user';
 import { db } from './firebase';
 
 export interface TodoItem {
@@ -23,7 +23,7 @@ export interface TodoItem {
     uid: string;
 };
 
-export function useTodos(user: userData) {
+export function useTodos(user: ReturnType<typeof useUser>) {
 
     const _store = useStore<{
         todos: TodoItem[],
@@ -34,61 +34,63 @@ export function useTodos(user: userData) {
     });
 
     if (user) {
-        
+
         useVisibleTask$(() => {
 
             _store.loading = true;
-            const unsubscribe = onSnapshot(
 
-                // query realtime todo list
-                query(
-                    collection(db, 'todos') as CollectionReference<TodoItem[]>,
-                    where('uid', '==', user.uid),
-                    orderBy('created')
-                ), (q) => {
+            if (user.data) {
 
-                    // toggle loading
-                    _store.loading = false;
+                return onSnapshot(
 
-                    // if no data
-                    if (q.empty) {
-                        _store.todos = [];
-                        return;
-                    }
+                    // query realtime todo list
+                    query(
+                        collection(db, 'todos') as CollectionReference<TodoItem[]>,
+                        where('uid', '==', user.data.uid),
+                        orderBy('created')
+                    ), (q) => {
 
-                    // get data, map to todo type
-                    let data = q.docs.map((doc) => ({ ...doc.data() as any, id: doc.id }));
-                    data = data.map(({
-                        id,
-                        complete,
-                        created,
-                        text,
-                        uid
-                    }) => ({
-                        id,
-                        complete,
-                        createdAt: created ? new Date(created?.toMillis()) : new Date(),
-                        text,
-                        uid
-                    }));
+                        // toggle loading
+                        _store.loading = false;
 
-                    /**
-                     * Note: Will get triggered 2x on add 
-                     * 1 - for optimistic update
-                     * 2 - update real date from server date
-                     */
+                        // if no data
+                        if (q.empty) {
+                            _store.todos = [];
+                            return;
+                        }
 
-                    // print data in dev mode
-                    if (import.meta.env.DEV) {
-                        console.log(data);
-                    }
+                        // get data, map to todo type
+                        let data = q.docs.map((doc) => ({ ...doc.data() as any, id: doc.id }));
+                        data = data.map(({
+                            id,
+                            complete,
+                            created,
+                            text,
+                            uid
+                        }) => ({
+                            id,
+                            complete,
+                            createdAt: created ? new Date(created?.toMillis()) : new Date(),
+                            text,
+                            uid
+                        }));
 
-                    // add to store
-                    _store.todos = data;
+                        /**
+                         * Note: Will get triggered 2x on add 
+                         * 1 - for optimistic update
+                         * 2 - update real date from server date
+                         */
 
-                });
+                        // print data in dev mode
+                        if (import.meta.env.DEV) {
+                            console.log(data);
+                        }
 
-            return unsubscribe;
+                        // add to store
+                        _store.todos = data;
+
+                    });
+            }
         });
     }
 
