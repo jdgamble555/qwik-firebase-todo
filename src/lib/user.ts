@@ -5,7 +5,7 @@ import {
     signOut,
     type User
 } from 'firebase/auth';
-import { auth, signIn } from './firebase';
+import { auth, signInWithWindow } from './firebase';
 
 export interface userData {
     photoURL: string | null;
@@ -14,16 +14,12 @@ export interface userData {
     email: string | null;
 };
 
-export const loginWithGoogle = $(async () => {
-    if (auth && signIn) {
-        signIn(auth, new GoogleAuthProvider());
-    }
+export const loginWithGoogle = $(() => {
+    signInWithWindow(auth, new GoogleAuthProvider());
 });
 
 export const logout = $(() => {
-    if (auth) {
-        signOut(auth);
-    }
+    signOut(auth);
 });
 
 export function useUser() {

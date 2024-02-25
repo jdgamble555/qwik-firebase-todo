@@ -95,21 +95,18 @@ export function useTodos(user: userData) {
 
 export const addTodo = (text: string) => {
 
-    if (auth) {
+    const uid = auth.currentUser?.uid;
 
-        const uid = auth.currentUser?.uid;
-
-        if (!uid) {
-            throw 'Must be logged in!';
-        }
-
-        addDoc(collection(db, 'todos'), {
-            uid,
-            text,
-            complete: false,
-            created: serverTimestamp()
-        });
+    if (!uid) {
+        throw 'Must be logged in!';
     }
+
+    addDoc(collection(db, 'todos'), {
+        uid,
+        text,
+        complete: false,
+        created: serverTimestamp()
+    });
 }
 
 export const updateTodo = (id: string, complete: boolean) => {

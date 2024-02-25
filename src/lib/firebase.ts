@@ -1,8 +1,5 @@
 import { getApps, initializeApp } from 'firebase/app';
-import { getAuth, signInWithPopup } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { isBrowser } from '@builder.io/qwik/build';
-
 
 // normally you should put this in your .env file
 const firebase_config = {
@@ -24,5 +21,5 @@ if (!getApps().length) {
 export const db = getFirestore();
 
 // load auth on browser only
-export const auth = isBrowser ? getAuth() : null;
-export const signIn = isBrowser ? signInWithPopup : null;
+export const auth = (await import('firebase/auth')).getAuth();
+export const signInWithWindow = (await import('firebase/auth')).signInWithPopup;
