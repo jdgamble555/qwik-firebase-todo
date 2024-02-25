@@ -35,11 +35,11 @@ export function useTodos(user: ReturnType<typeof useUser>) {
 
     useVisibleTask$(({ track }) => {
 
-        track(() => user.data);
+        track(() => user.value);
 
         _store.loading = true;
 
-        if (!user.data) {
+        if (!user.value) {
             return;
         }
 
@@ -48,7 +48,7 @@ export function useTodos(user: ReturnType<typeof useUser>) {
             // query realtime todo list
             query(
                 collection(db, 'todos') as CollectionReference<TodoItem[]>,
-                where('uid', '==', user.data.uid),
+                where('uid', '==', user.value.uid),
                 orderBy('created')
             ), (q) => {
 

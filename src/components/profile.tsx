@@ -7,11 +7,11 @@ export default component$(() => {
 
     const user = useUser();
 
-    if (!user.data) {
+    if (!user.value) {
         return;
     }
 
-    const { displayName, photoURL, uid } = user.data;
+    const { displayName, photoURL, uid } = user.value;
 
     return (
         <div class="flex flex-col gap-3 items-center">
