@@ -11,7 +11,7 @@ import {
     updateDoc,
     where
 } from 'firebase/firestore';
-import { useStore, useTask$ } from '@builder.io/qwik';
+import { useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useUser } from './user';
 import { db } from './firebase';
 
@@ -33,7 +33,7 @@ export function useTodos(user: ReturnType<typeof useUser>) {
         loading: true
     });
 
-    useTask$(({ track }) => {
+    useVisibleTask$(({ track }) => {
 
         track(() => user.data);
 
