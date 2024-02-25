@@ -96,6 +96,7 @@ export function useTodos(user: userData) {
 export const addTodo = (text: string) => {
 
     if (auth) {
+
         const uid = auth.currentUser?.uid;
 
         if (!uid) {
@@ -109,13 +110,10 @@ export const addTodo = (text: string) => {
             created: serverTimestamp()
         });
     }
-
 }
 
 export const updateTodo = (id: string, complete: boolean) => {
-
     updateDoc(doc(db, 'todos', id), { complete });
-
 }
 
 export const deleteTodo = (id: string) => {

@@ -5,7 +5,7 @@ import {
     signOut,
     type User
 } from 'firebase/auth';
-import { auth } from './firebase';
+import { auth, signIn } from './firebase';
 
 export interface userData {
     photoURL: string | null;
@@ -15,8 +15,7 @@ export interface userData {
 };
 
 export const loginWithGoogle = $(async () => {
-    if (auth) {
-        const signIn = (await import('firebase/auth')).signInWithPopup;
+    if (auth && signIn) {
         signIn(auth, new GoogleAuthProvider());
     }
 });
@@ -32,10 +31,11 @@ export function useUser() {
 
     useVisibleTask$(() => {
 
-        // toggle loading
-        _store.loading = true;
-
         if (auth) {
+
+            // toggle loading
+            _store.loading = true;
+
             // subscribe to user changes
             const unsubscribe = onIdTokenChanged(auth, (_user: User | null) => {
                 _store.loading = false;
