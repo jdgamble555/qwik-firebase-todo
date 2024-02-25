@@ -17,7 +17,7 @@ export interface userData {
 export const loginWithGoogle = $(() => {
     if (signIn && auth) {
         signIn(auth, new GoogleAuthProvider());
-    } 
+    }
 });
 
 export const logout = $(() => {
@@ -32,32 +32,34 @@ export function useUser() {
 
     useVisibleTask$(() => {
 
-        if (auth) {
-
-            // toggle loading
-            _store.loading = true;
-
-            // subscribe to user changes
-            return onIdTokenChanged(auth, (_user: User | null) => {
-                _store.loading = false;
-                if (!_user) {
-                    _store.data = null;
-                    return;
-                }
-
-                // map data to user data type
-                const { photoURL, uid, displayName, email } = _user;
-                const data = { photoURL, uid, displayName, email };
-
-                // print data in dev mode
-                if (import.meta.env.DEV) {
-                    console.log(data);
-                }
-
-                // set store
-                _store.data = data;
-            });
+        if (!auth) {
+            _store.data = null;
+            return;
         }
+
+        // toggle loading
+        _store.loading = true;
+
+        // subscribe to user changes
+        return onIdTokenChanged(auth, (_user: User | null) => {
+            _store.loading = false;
+            if (!_user) {
+                _store.data = null;
+                return;
+            }
+
+            // map data to user data type
+            const { photoURL, uid, displayName, email } = _user;
+            const data = { photoURL, uid, displayName, email };
+
+            // print data in dev mode
+            if (import.meta.env.DEV) {
+                console.log(data);
+            }
+
+            // set store
+            _store.data = data;
+        });
     });
 
     return _store;
