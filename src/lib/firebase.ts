@@ -1,4 +1,4 @@
-import { getApp, getApps, initializeApp } from 'firebase/app';
+import { getApps, initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { isBrowser } from '@builder.io/qwik/build';
@@ -17,7 +17,9 @@ const firebase_config = {
 
 // initialize firebase
 
-export const app = getApps().length ? getApp() : initializeApp(firebase_config);
+if (!getApps().length) {
+    initializeApp(firebase_config);
+}
 
 export const auth = isBrowser ? getAuth() : null;
 export const db = getFirestore();

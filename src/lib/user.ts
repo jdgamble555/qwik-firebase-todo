@@ -2,11 +2,11 @@ import { useStore, useVisibleTask$, $ } from '@builder.io/qwik';
 import {
     GoogleAuthProvider,
     onIdTokenChanged,
-    //signInWithPopup,
+    signInWithPopup,
     signOut,
     type User
 } from 'firebase/auth';
-import { app, auth } from './firebase';
+import { auth } from './firebase';
 
 export interface userData {
     photoURL: string | null;
@@ -15,13 +15,16 @@ export interface userData {
     email: string | null;
 };
 
-export const loginWithGoogle = $(async () => {
-    //const auth2 = (await import('firebase/auth')).getAuth(app);
-    //return (await import('firebase/auth')).signInWithPopup(auth2, new GoogleAuthProvider())
+export const loginWithGoogle = $(() => {
+    if (auth) {
+        signInWithPopup(auth, new GoogleAuthProvider());
+    }
 });
 
 export const logout = $(() => {
-    //signOut(auth)
+    if (auth) {
+        signOut(auth)
+    }
 });
 
 export function useUser() {
@@ -55,7 +58,6 @@ export function useUser() {
             });
             return unsubscribe;
         }
-
     });
 
     return _store;
