@@ -33,61 +33,64 @@ export function useTodos(user: userData) {
         loading: true
     });
 
-    useVisibleTask$(() => {
+    if (user) {
+        
+        useVisibleTask$(() => {
 
-        _store.loading = true;
-        const unsubscribe = onSnapshot(
+            _store.loading = true;
+            const unsubscribe = onSnapshot(
 
-            // query realtime todo list
-            query(
-                collection(db, 'todos') as CollectionReference<TodoItem[]>,
-                where('uid', '==', user.uid),
-                orderBy('created')
-            ), (q) => {
+                // query realtime todo list
+                query(
+                    collection(db, 'todos') as CollectionReference<TodoItem[]>,
+                    where('uid', '==', user.uid),
+                    orderBy('created')
+                ), (q) => {
 
-                // toggle loading
-                _store.loading = false;
+                    // toggle loading
+                    _store.loading = false;
 
-                // if no data
-                if (q.empty) {
-                    _store.todos = [];
-                    return;
-                }
+                    // if no data
+                    if (q.empty) {
+                        _store.todos = [];
+                        return;
+                    }
 
-                // get data, map to todo type
-                let data = q.docs.map((doc) => ({ ...doc.data() as any, id: doc.id }));
-                data = data.map(({
-                    id,
-                    complete,
-                    created,
-                    text,
-                    uid
-                }) => ({
-                    id,
-                    complete,
-                    createdAt: created ? new Date(created?.toMillis()) : new Date(),
-                    text,
-                    uid
-                }));
+                    // get data, map to todo type
+                    let data = q.docs.map((doc) => ({ ...doc.data() as any, id: doc.id }));
+                    data = data.map(({
+                        id,
+                        complete,
+                        created,
+                        text,
+                        uid
+                    }) => ({
+                        id,
+                        complete,
+                        createdAt: created ? new Date(created?.toMillis()) : new Date(),
+                        text,
+                        uid
+                    }));
 
-                /**
-                 * Note: Will get triggered 2x on add 
-                 * 1 - for optimistic update
-                 * 2 - update real date from server date
-                 */
+                    /**
+                     * Note: Will get triggered 2x on add 
+                     * 1 - for optimistic update
+                     * 2 - update real date from server date
+                     */
 
-                // print data in dev mode
-                if (import.meta.env.DEV) {
-                    console.log(data);
-                }
+                    // print data in dev mode
+                    if (import.meta.env.DEV) {
+                        console.log(data);
+                    }
 
-                // add to store
-                _store.todos = data;
+                    // add to store
+                    _store.todos = data;
 
-            });
+                });
 
-        return unsubscribe;
-    });
+            return unsubscribe;
+        });
+    }
 
     return _store;
 };
