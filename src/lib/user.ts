@@ -6,7 +6,7 @@ import {
     signOut,
     type User
 } from 'firebase/auth';
-import { auth } from './firebase';
+import { app, auth } from './firebase';
 
 export interface userData {
     photoURL: string | null;
@@ -16,7 +16,7 @@ export interface userData {
 };
 
 export const loginWithGoogle = $(async () => {
-    const auth2 = (await import('firebase/auth')).getAuth();
+    const auth2 = (await import('firebase/auth')).getAuth(app);
     return (await import('firebase/auth')).signInWithPopup(auth2, new GoogleAuthProvider())
 });
 
