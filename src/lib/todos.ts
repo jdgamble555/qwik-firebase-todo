@@ -33,9 +33,9 @@ export function useTodos(user: ReturnType<typeof useUser>) {
         loading: true
     });
 
-    useVisibleTask$(({ track, cleanup }) => {
+    useVisibleTask$(({ track }) => {
 
-        track(() => user.value);
+        track(() => user);
 
         _store.loading = true;
 
@@ -43,7 +43,7 @@ export function useTodos(user: ReturnType<typeof useUser>) {
             return;
         }
 
-        const unsubscribe = onSnapshot(
+        return onSnapshot(
 
             // query realtime todo list
             query(
@@ -91,11 +91,6 @@ export function useTodos(user: ReturnType<typeof useUser>) {
                 // add to store
                 _store.todos = data;
             });
-
-        cleanup(() => {
-            console.log('we working right?');
-            unsubscribe(); 
-        });
     });
 
     return _store;
