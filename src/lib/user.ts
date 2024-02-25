@@ -16,8 +16,8 @@ export interface userData {
 };
 
 export const loginWithGoogle = $(async () => {
-    const auth2 = (await import('firebase/auth')).getAuth(app);
-    return (await import('firebase/auth')).signInWithPopup(auth2, new GoogleAuthProvider())
+    //const auth2 = (await import('firebase/auth')).getAuth(app);
+    //return (await import('firebase/auth')).signInWithPopup(auth2, new GoogleAuthProvider())
 });
 
 export const logout = $(() => signOut(auth));
