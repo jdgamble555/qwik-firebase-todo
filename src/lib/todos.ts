@@ -33,7 +33,7 @@ export function useTodos(user: ReturnType<typeof useUser>) {
         loading: true
     });
 
-    if (user) {
+    if (user.data) {
 
         useVisibleTask$(() => {
 
@@ -91,6 +91,8 @@ export function useTodos(user: ReturnType<typeof useUser>) {
 
                     });
             }
+
+
         });
     }
 
