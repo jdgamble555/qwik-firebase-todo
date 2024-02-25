@@ -60,6 +60,7 @@ export function useUser() {
             // set store
             _store.data = data;
         });
+
     });
 
     return _store;
