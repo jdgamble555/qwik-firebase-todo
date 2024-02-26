@@ -1,4 +1,8 @@
-import { onSnapshot } from 'firebase/firestore';
+import {
+    type DocumentData,
+    onSnapshot,
+    type QuerySnapshot
+} from 'firebase/firestore';
 import {
     addDoc,
     collection,
@@ -19,9 +23,25 @@ export interface TodoItem {
     id: string;
     text: string;
     complete: boolean;
-    createdAt: Date;
+    created: Date;
     uid: string;
 };
+
+export const snapToData = (q: QuerySnapshot<DocumentData, DocumentData>) => {
+
+    // creates todo data from snapshot
+    if (q.empty) {
+        return [];
+    }
+    return q.docs.map((doc) => {
+        const data = doc.data();
+        return {
+            ...data,
+            created: data.created.toMillis(),
+            id: doc.id
+        }
+    }) as TodoItem[];
+}
 
 export function useTodos(user: ReturnType<typeof useUser>) {
 
@@ -57,27 +77,8 @@ export function useTodos(user: ReturnType<typeof useUser>) {
                 // toggle loading
                 _store.loading = false;
 
-                // if no data
-                if (q.empty) {
-                    _store.todos = [];
-                    return;
-                }
-
                 // get data, map to todo type
-                let data = q.docs.map((doc) => ({ ...doc.data() as any, id: doc.id }));
-                data = data.map(({
-                    id,
-                    complete,
-                    created,
-                    text,
-                    uid
-                }) => ({
-                    id,
-                    complete,
-                    createdAt: created ? new Date(created?.toMillis()) : new Date(),
-                    text,
-                    uid
-                }));
+                const data = snapToData(q);
 
                 /**
                  * Note: Will get triggered 2x on add 
