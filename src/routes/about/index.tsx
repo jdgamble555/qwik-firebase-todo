@@ -4,7 +4,7 @@ import { getAbout } from "~/lib/about";
 
 export const useAboutPage = routeLoader$(async ({ cacheControl }) => {
 
-    cacheControl({ maxAge: 31536000 });
+    cacheControl({ maxAge: 31536000, public: true });
 
     return await getAbout();    
 });
