@@ -37,7 +37,7 @@ export const snapToData = (q: QuerySnapshot<DocumentData, DocumentData>) => {
         const data = doc.data();
         return {
             ...data,
-            created: new Date(data.created.toMillis()),
+            created: new Date(data.created?.toMillis()),
             id: doc.id
         }
     }) as TodoItem[];
@@ -79,6 +79,7 @@ export function useTodos(user: ReturnType<typeof useUser>) {
 
                 // get data, map to todo type
                 const data = snapToData(q);
+                console.log(data);
 
                 /**
                  * Note: Will get triggered 2x on add 
