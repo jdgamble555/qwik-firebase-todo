@@ -37,7 +37,7 @@ export const snapToData = (q: QuerySnapshot<DocumentData, DocumentData>) => {
         const data = doc.data();
         return {
             ...data,
-            created: data.created.toMillis(),
+            created: data.created?.toMillis(),
             id: doc.id
         }
     }) as TodoItem[];
