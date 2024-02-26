@@ -11,10 +11,6 @@ export default component$(() => {
     <div class="text-center">
       <h1 class="text-3xl font-semibold my-3">Qwik Firebase Todo App</h1>
       {user.loading ? <Loading /> : user.data ? <Profile /> : <Login />}
-      <div class="bg-red-600">
-
-      </div>
-
     </div>
   );
 });
