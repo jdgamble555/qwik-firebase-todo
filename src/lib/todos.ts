@@ -79,7 +79,6 @@ export function useTodos(user: ReturnType<typeof useUser>) {
 
                 // get data, map to todo type
                 const data = snapToData(q);
-                console.log(data);
 
                 /**
                  * Note: Will get triggered 2x on add 
