@@ -69,7 +69,7 @@ export function useTodos(user: ReturnType<typeof useUser>) {
 
             // query realtime todo list
             query(
-                collection(db, 'todos') as CollectionReference<TodoItem[]>,
+                collection(db, 'todos'),
                 where('uid', '==', user.data.uid),
                 orderBy('created')
             ), (q) => {
