@@ -6,7 +6,6 @@ import {
 import {
     addDoc,
     collection,
-    CollectionReference,
     deleteDoc,
     doc,
     orderBy,
