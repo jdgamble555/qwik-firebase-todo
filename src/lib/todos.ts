@@ -1,7 +1,8 @@
 import {
     type DocumentData,
     onSnapshot,
-    type QuerySnapshot
+    type QuerySnapshot,
+    Timestamp
 } from 'firebase/firestore';
 import {
     addDoc,
@@ -26,7 +27,9 @@ export interface TodoItem {
     uid: string;
 };
 
-export const snapToData = (q: QuerySnapshot<DocumentData, DocumentData>) => {
+export const snapToData = (
+    q: QuerySnapshot<DocumentData, DocumentData>
+) => {
 
     // creates todo data from snapshot
     if (q.empty) {
@@ -34,9 +37,10 @@ export const snapToData = (q: QuerySnapshot<DocumentData, DocumentData>) => {
     }
     return q.docs.map((doc) => {
         const data = doc.data();
+        const created = data.created as Timestamp;
         return {
             ...data,
-            created: new Date(data.created?.toMillis()),
+            created: created.toDate(),
             id: doc.id
         }
     }) as TodoItem[];
