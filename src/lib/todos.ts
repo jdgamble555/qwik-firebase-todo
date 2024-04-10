@@ -17,7 +17,7 @@ import {
 } from 'firebase/firestore';
 import { useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useUser } from './user';
-import { db } from './firebase';
+import { auth, db } from './firebase';
 
 export interface TodoItem {
     id: string;
@@ -36,17 +36,23 @@ export const snapToData = (
         return [];
     }
     return q.docs.map((doc) => {
-        const data = doc.data();
+        const data = doc.data({
+            serverTimestamps: 'estimate'
+        });
         const created = data.created as Timestamp;
         return {
-            ...data,
+            id: doc.id,
+            text: data.text,
+            complete: data.complete,
             created: created.toDate(),
-            id: doc.id
-        }
+            uid: data.uid
+        };
     }) as TodoItem[];
 }
 
-export function useTodos(user: ReturnType<typeof useUser>) {
+export function useTodos() {
+
+    const user = useUser();
 
     const _store = useStore<{
         todos: TodoItem[],
@@ -103,7 +109,13 @@ export function useTodos(user: ReturnType<typeof useUser>) {
 };
 
 
-export const addTodo = (e: SubmitEvent, uid: string) => {
+export const addTodo = (e: SubmitEvent) => {
+
+    const user = auth?.currentUser;
+
+    if (!user) {
+        throw 'No User!';
+    }
 
     // get and reset form
     const target = e.target as HTMLFormElement;
@@ -118,7 +130,7 @@ export const addTodo = (e: SubmitEvent, uid: string) => {
     target.reset();
 
     addDoc(collection(db, 'todos'), {
-        uid,
+        uid: user.uid,
         text: task,
         complete: false,
         created: serverTimestamp()
