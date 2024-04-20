@@ -74,6 +74,10 @@ export function useTodos() {
             return;
         }
 
+        if (!db) {
+            return;
+        }
+
         return onSnapshot(
 
             // query realtime todo list
@@ -126,6 +130,10 @@ export const addTodo = (e: SubmitEvent) => {
         return;
     }
 
+    if (!db) {
+        return;
+    }
+
     // reset form
     target.reset();
 
@@ -138,9 +146,15 @@ export const addTodo = (e: SubmitEvent) => {
 }
 
 export const updateTodo = (id: string, complete: boolean) => {
+    if (!db) {
+        return;
+    }
     updateDoc(doc(db, 'todos', id), { complete });
 }
 
 export const deleteTodo = (id: string) => {
+    if (!db) {
+        return;
+    }
     deleteDoc(doc(db, 'todos', id));
 }

@@ -5,7 +5,7 @@ import {
     signOut,
     type User
 } from 'firebase/auth';
-import { auth, signIn } from './firebase';
+import { auth, signInWithPopup } from './firebase';
 import { useShared } from './use-shared';
 
 export interface userData {
@@ -16,15 +16,17 @@ export interface userData {
 };
 
 export const loginWithGoogle = $(() => {
-    if (signIn && auth) {
-        signIn(auth, new GoogleAuthProvider());
+    if (!signInWithPopup || !auth) {
+        return;
     }
+    signInWithPopup(auth, new GoogleAuthProvider());
 });
 
 export const logout = $(() => {
-    if (auth) {
-        signOut(auth);
+    if (!auth) {
+        return;
     }
+    signOut(auth);
 });
 
 export function _useUser() {
