@@ -1,5 +1,5 @@
-import { doc, getDoc } from "firebase/firestore/lite";
-import { db } from "./firebase";
+import { doc, getDoc, getFirestore } from "firebase/firestore/lite";
+import { app } from "./firebase";
 
 type AboutDoc = {
     name: string;
@@ -7,6 +7,8 @@ type AboutDoc = {
 };
 
 export const getAbout = async () =>{
+
+    const db = getFirestore(app);
 
     const aboutSnap = await getDoc(
         doc(db, '/about/ZlNJrKd6LcATycPRmBPA')
