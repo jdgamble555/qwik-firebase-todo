@@ -2,9 +2,9 @@ import { component$ } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { getAbout } from "~/lib/about";
 
-export const useAboutPage = routeLoader$(async () => {
+export const useAboutPage = routeLoader$(async ({ cacheControl }) => {
 
-    //cacheControl({ maxAge: 31536000, public: true });
+    cacheControl({ maxAge: 31536000, public: true });
 
     return await getAbout();
 });
