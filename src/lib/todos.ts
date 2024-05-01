@@ -23,7 +23,7 @@ export interface TodoItem {
     id: string;
     text: string;
     complete: boolean;
-    created: Date;
+    createdAt: Date;
     uid: string;
 };
 
@@ -39,12 +39,12 @@ export const snapToData = (
         const data = doc.data({
             serverTimestamps: 'estimate'
         });
-        const created = data.created as Timestamp;
+        const createdAt = data['createdAt'] as Timestamp;
         return {
             id: doc.id,
             text: data.text,
             complete: data.complete,
-            created: created.toDate(),
+            createdAt: createdAt.toDate(),
             uid: data.uid
         };
     }) as TodoItem[];
@@ -84,7 +84,7 @@ export function useTodos() {
             query(
                 collection(db, 'todos'),
                 where('uid', '==', user.data.uid),
-                orderBy('created')
+                orderBy('createdAt')
             ), (q) => {
 
                 // toggle loading
@@ -141,7 +141,7 @@ export const addTodo = (e: SubmitEvent) => {
         uid: user.uid,
         text: task,
         complete: false,
-        created: serverTimestamp()
+        createdAt: serverTimestamp()
     });
 }
 
