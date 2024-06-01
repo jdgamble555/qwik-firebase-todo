@@ -18,24 +18,22 @@ export const app = getApps().length
     ? getApp()
     : initializeApp(firebase_config);
 
-try {
-    const auth = getAuth(app);
-    console.log(auth.config.authDomain);
-}
-
-catch (e) {
-    if (e instanceof FirebaseError) {
-        console.log(e);
-    }
-}
-
 
 
 const db = getFirestore(app);
 
 export const getAbout = async () => {
 
-
+    try {
+        const auth = getAuth(app);
+        console.log(auth.config.authDomain);
+    }
+    
+    catch (e) {
+        if (e instanceof FirebaseError) {
+            console.log(e);
+        }
+    }
 
     const aboutSnap = await getDoc(
         doc(db, '/about/ZlNJrKd6LcATycPRmBPA')
