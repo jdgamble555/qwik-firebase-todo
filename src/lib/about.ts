@@ -28,11 +28,11 @@ export const getAbout = async () => {
         const auth = getAuth(app);
         console.log(auth.config.authDomain);
     }
-    
+
     catch (e) {
-        if (e instanceof FirebaseError) {
-            console.log(e);
-        }
+
+        console.log(e);
+
     }
 
     const aboutSnap = await getDoc(
