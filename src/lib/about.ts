@@ -1,7 +1,6 @@
 import { doc, getDoc, getFirestore } from "firebase/firestore/lite";
 //import { app } from "./firebase";
-import { getAuth } from "firebase/auth";
-import { FirebaseError, getApp, getApps, initializeApp } from "firebase/app";
+import { getApp, getApps, initializeApp } from "firebase/app";
 
 type AboutDoc = {
     name: string;
@@ -18,22 +17,9 @@ export const app = getApps().length
     ? getApp()
     : initializeApp(firebase_config);
 
-
-
 const db = getFirestore(app);
 
 export const getAbout = async () => {
-
-    try {
-        const auth = getAuth(app);
-        console.log(auth.config.authDomain);
-    }
-
-    catch (e) {
-
-        console.log(e);
-
-    }
 
     const aboutSnap = await getDoc(
         doc(db, '/about/ZlNJrKd6LcATycPRmBPA')
