@@ -13,6 +13,8 @@ export const getAbout = async () =>{
 
     const auth = getAuth(app);
 
+    console.log(auth.currentUser);
+
     const aboutSnap = await getDoc(
         doc(db, '/about/ZlNJrKd6LcATycPRmBPA')
     );
