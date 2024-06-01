@@ -25,7 +25,7 @@ try {
 
 catch (e) {
     if (e instanceof FirebaseError) {
-        console.log(e.code);
+        console.log(e);
     }
 }
 
