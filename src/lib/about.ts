@@ -18,11 +18,11 @@ export const app = getApps().length
     ? getApp()
     : initializeApp(firebase_config);
 
-export const getAbout = async () =>{
+const db = getFirestore(app);
 
-    const db = getFirestore(app);
+const auth = getAuth(app);
 
-    const auth = getAuth(app);
+export const getAbout = async () => {
 
     console.log(auth.config.authDomain);
 
