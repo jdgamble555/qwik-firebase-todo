@@ -1,7 +1,7 @@
 import { doc, getDoc, getFirestore } from "firebase/firestore/lite";
 //import { app } from "./firebase";
 import { getAuth } from "firebase/auth";
-import { getApp, getApps, initializeApp } from "firebase/app";
+import { FirebaseError, getApp, getApps, initializeApp } from "firebase/app";
 
 type AboutDoc = {
     name: string;
@@ -24,7 +24,9 @@ try {
 }
 
 catch (e) {
-
+    if (e instanceof FirebaseError) {
+        console.log(e.code);
+    }
 }
 
 
