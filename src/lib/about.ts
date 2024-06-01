@@ -18,13 +18,22 @@ export const app = getApps().length
     ? getApp()
     : initializeApp(firebase_config);
 
-const auth = getAuth(app);
+try {
+    const auth = getAuth(app);
+    console.log(auth.config.authDomain);
+}
+
+catch (e) {
+
+}
+
+
 
 const db = getFirestore(app);
 
 export const getAbout = async () => {
 
-    console.log(auth.config.authDomain);
+
 
     const aboutSnap = await getDoc(
         doc(db, '/about/ZlNJrKd6LcATycPRmBPA')
