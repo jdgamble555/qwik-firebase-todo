@@ -18,9 +18,9 @@ export const app = getApps().length
     ? getApp()
     : initializeApp(firebase_config);
 
-const db = getFirestore(app);
-
 const auth = getAuth(app);
+
+const db = getFirestore(app);
 
 export const getAbout = async () => {
 
