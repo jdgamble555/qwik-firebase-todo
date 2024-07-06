@@ -6,6 +6,8 @@ export const useAboutPage = routeLoader$(async ({ headers, fail }) => {
 
     const authIdToken = headers.get('Authorization')?.split('Bearer ')[1];
 
+    console.log(authIdToken);
+
     if (!authIdToken) {
         return fail(401, { message: 'Not Logged In!' });
     }
