@@ -1,9 +1,9 @@
 import { getApp, getApps, initializeApp } from "firebase/app";
 import { getAuth, getIdToken, onAuthStateChanged } from "firebase/auth";
 
-const firebase_config = {}
-
-
+const firebase_config = JSON.parse(
+    import.meta.env.PUBLIC_FIREBASE_CONFIG
+);
 
 const workerApp = getApps().length
     ? getApp()
