@@ -8,8 +8,7 @@
  * You can also use this file to add more functionality that runs in the service worker.
  */
 import { setupServiceWorker } from '@builder.io/qwik-city/service-worker';
-import { requestProcessor } from './utils';
-
+import { requestProcessor } from '~/lib/utils';
 
 setupServiceWorker();
 
