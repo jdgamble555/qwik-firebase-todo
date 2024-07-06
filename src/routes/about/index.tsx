@@ -2,16 +2,30 @@ import { component$ } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { getAbout } from "~/lib/about";
 
-export const useAboutPage = routeLoader$(async ({ cacheControl }) => {
+export const useAboutPage = routeLoader$(async ({ headers, fail }) => {
 
-    cacheControl({ maxAge: 31536000, public: true });
+    const authIdToken = headers.get('Authorization')?.split('Bearer ')[1];
 
-    return await getAbout();
+    if (!authIdToken) {
+        return fail(401, { message: 'Not Logged In!' });
+    }
+
+    return await getAbout(authIdToken);
 });
 
 export default component$(() => {
 
     const about = useAboutPage();
+
+    if (about.value.failed) {
+        return (
+            <div class="p-4 text-center font-bold">
+                <p class="text-red-500">
+                    {about.value.message}
+                </p>
+            </div>
+        );
+    }
 
     return (
         <div class="flex items-center justify-center my-5">

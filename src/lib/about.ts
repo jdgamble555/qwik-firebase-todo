@@ -1,25 +1,14 @@
-import { doc, getDoc, getFirestore } from "firebase/firestore/lite";
-//import { app } from "./firebase";
-import { getApp, getApps, initializeApp } from "firebase/app";
+import { doc, getDoc } from "firebase/firestore/lite";
+import { firebaseServer } from "./firebase-lite";
 
 type AboutDoc = {
     name: string;
     description: string;
 };
 
-const firebase_config = JSON.parse(
-    import.meta.env.PUBLIC_FIREBASE_CONFIG
-);
+export const getAbout = async (authIdToken: string) => {
 
-// initialize firebase
-
-export const app = getApps().length
-    ? getApp()
-    : initializeApp(firebase_config);
-
-const db = getFirestore(app);
-
-export const getAbout = async () => {
+    const { db } = firebaseServer(authIdToken);
 
     const aboutSnap = await getDoc(
         doc(db, '/about/ZlNJrKd6LcATycPRmBPA')
