@@ -8,7 +8,7 @@
  * You can also use this file to add more functionality that runs in the service worker.
  */
 import { setupServiceWorker } from '@builder.io/qwik-city/service-worker';
-//import { requestProcessor } from '~/lib/utils';
+import { requestProcessor } from '~/lib/utils';
 
 
 setupServiceWorker();
@@ -17,7 +17,12 @@ addEventListener('install', () => self.skipWaiting());
 
 addEventListener('activate', () => self.clients.claim());
 
+addEventListener('fetch', (event) => {
 
+    const evt = event as FetchEvent;
+
+    evt.respondWith(requestProcessor(evt));
+});
 
 
 declare const self: ServiceWorkerGlobalScope;
