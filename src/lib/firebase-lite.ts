@@ -16,7 +16,8 @@ export const firebaseServer = async ({ headers }: RequestEventCommon<QwikCityPla
     });
 
     // auth
-    const serverAuth = getAuth(serverApp);
+    try {
+            const serverAuth = getAuth(serverApp);
     await serverAuth.authStateReady();
 
     console.log(serverApp.settings.authIdToken);
@@ -37,4 +38,9 @@ export const firebaseServer = async ({ headers }: RequestEventCommon<QwikCityPla
         serverDB,
         error: null
     };
+    } catch(e: any) {
+        return {
+            error: e.message
+        };        
+    }
 };
