@@ -1,14 +1,11 @@
-import { doc, getDoc } from "firebase/firestore/lite";
-import { firebaseServer } from "./firebase-lite";
+import { doc, type Firestore, getDoc } from "firebase/firestore/lite";
 
 type AboutDoc = {
     name: string;
     description: string;
 };
 
-export const getAbout = async (authIdToken: string) => {
-
-    const { db } = firebaseServer(authIdToken);
+export const getAbout = async (db: Firestore) => {
 
     const aboutSnap = await getDoc(
         doc(db, '/about/ZlNJrKd6LcATycPRmBPA')

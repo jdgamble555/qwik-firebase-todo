@@ -1,25 +1,20 @@
 import { component$ } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { getAbout } from "~/lib/about";
+import { firebaseServer } from "~/lib/firebase-lite";
 
-export const useAboutPage = routeLoader$(async ({ headers, fail }) => {
+export const useAboutPage = routeLoader$(async (event) => {
 
-    const authIdToken = headers.get('Authorization')?.split('Bearer ')[1];
+    const { serverDB } = await firebaseServer(event);
 
-    console.log(authIdToken);
-
-    if (!authIdToken) {
-        return fail(401, { message: 'Not Logged In!' });
-    }
-
-    return await getAbout(authIdToken);
+    return await getAbout(serverDB);
 });
 
 export default component$(() => {
 
     const about = useAboutPage();
 
-    if (about.value.failed) {
+    /*if (about.value.failed) {
         return (
             <div class="p-4 text-center font-bold">
                 <p class="text-red-500">
@@ -27,7 +22,7 @@ export default component$(() => {
                 </p>
             </div>
         );
-    }
+    }*/
 
     return (
         <div class="flex items-center justify-center my-5">
