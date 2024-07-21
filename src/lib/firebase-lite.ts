@@ -1,5 +1,5 @@
 import { RequestEventCommon } from "@builder.io/qwik-city";
-import { initializeServerApp } from "firebase/app";
+import { FirebaseError, initializeServerApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore/lite";
 
@@ -38,9 +38,14 @@ export const firebaseServer = async ({ headers }: RequestEventCommon<QwikCityPla
         serverDB,
         error: null
     };
-    } catch(e: any) {
-        return {
-            error: e.message
-        };        
+    } catch(e) {
+
+        if (e instanceof FirebaseError) {
+            return {
+                error: e.cause
+            }
+        }
+        
+        console.log(JSON.stringify(e));
     }
 };
