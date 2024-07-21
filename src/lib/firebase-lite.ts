@@ -7,7 +7,7 @@ const firebase_config = JSON.parse(
     import.meta.env.PUBLIC_FIREBASE_CONFIG
 );
 
-export const firebaseServer = async ({ headers, error }: RequestEventCommon<QwikCityPlatform>) => {
+export const firebaseServer = async ({ headers }: RequestEventCommon<QwikCityPlatform>) => {
 
     const authIdToken = headers.get('Authorization')?.split('Bearer ')[1];
 
@@ -19,10 +19,14 @@ export const firebaseServer = async ({ headers, error }: RequestEventCommon<Qwik
     const serverAuth = getAuth(serverApp);
     await serverAuth.authStateReady();
 
-    console.log(serverApp.settings.authIdToken)
+    console.log(serverApp.settings.authIdToken);
 
     if (serverAuth.currentUser === null) {
-        throw error(401, 'Invalid Token');
+        return {
+            error: 'Invalid Token',
+            serverAuth: null,
+            serverDB: null
+        };
     }
 
     // db
@@ -30,6 +34,7 @@ export const firebaseServer = async ({ headers, error }: RequestEventCommon<Qwik
 
     return {
         serverAuth,
-        serverDB
+        serverDB,
+        error: null
     };
 };

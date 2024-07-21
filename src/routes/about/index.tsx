@@ -5,7 +5,11 @@ import { firebaseServer } from "~/lib/firebase-lite";
 
 export const useAboutPage = routeLoader$(async (event) => {
 
-    const { serverDB } = await firebaseServer(event);
+    const { serverDB, error } = await firebaseServer(event);
+
+    if (error || !serverDB) {
+        return event.fail(401, { message: error });
+    }
 
     return await getAbout(serverDB);
 });
