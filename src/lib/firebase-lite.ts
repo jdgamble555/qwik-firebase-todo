@@ -16,36 +16,27 @@ export const firebaseServer = async ({ headers }: RequestEventCommon<QwikCityPla
     });
 
     // auth
-    try {
-        const serverAuth = getAuth(serverApp);
-        await serverAuth.authStateReady();
 
-        console.log(serverApp.settings.authIdToken);
+    const serverAuth = getAuth(serverApp);
+    await serverAuth.authStateReady();
 
-        if (serverAuth.currentUser === null) {
-            return {
-                error: 'Invalid Token',
-                serverAuth: null,
-                serverDB: null
-            };
-        }
+    console.log(serverApp.settings.authIdToken);
 
-        // db
-        const serverDB = getFirestore(serverApp);
-
+    if (serverAuth.currentUser === null) {
         return {
-            serverAuth,
-            serverDB,
-            error: null
+            error: 'Invalid Token',
+            serverAuth: null,
+            serverDB: null
         };
-    } catch (e) {
-
-        if (e instanceof FirebaseError) {
-            return {
-                error: e.cause
-            }
-        }
-
-        console.log(JSON.stringify(e));
     }
+
+    // db
+    const serverDB = getFirestore(serverApp);
+
+    return {
+        serverAuth,
+        serverDB,
+        error: null
+    };
+
 };
