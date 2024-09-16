@@ -5,10 +5,10 @@ import { firebaseServer } from "~/lib/firebase-lite";
 
 export const useAboutPage = routeLoader$(async (event) => {
 
-    const { serverDB, error } = await firebaseServer(event);
+    const { serverDB, serverAuth } = await firebaseServer(event);
 
-    if (error || !serverDB) {
-        return event.fail(401, { message: error });
+    if (!serverAuth.currentUser) {
+        return event.fail(401, { message: 'You must be logged in!' });
     }
 
     return await getAbout(serverDB);
@@ -18,7 +18,7 @@ export default component$(() => {
 
     const about = useAboutPage();
 
-    /*if (about.value.failed) {
+    if (about.value.failed) {
         return (
             <div class="p-4 text-center font-bold">
                 <p class="text-red-500">
@@ -26,7 +26,7 @@ export default component$(() => {
                 </p>
             </div>
         );
-    }*/
+    }
 
     return (
         <div class="flex items-center justify-center my-5">

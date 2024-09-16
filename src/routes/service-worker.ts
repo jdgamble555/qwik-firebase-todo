@@ -10,13 +10,21 @@
 import { setupServiceWorker } from '@builder.io/qwik-city/service-worker';
 import { requestProcessor } from '~/lib/utils';
 
+declare const self: ServiceWorkerGlobalScope;
+
 setupServiceWorker();
 
 addEventListener('install', () => self.skipWaiting());
 
-addEventListener('activate', () => self.clients.claim());
+self.addEventListener('activate', (event) => {
 
-addEventListener('fetch', (event) => {
+    const evt = event as ExtendableEvent;
+
+    evt.waitUntil(self.clients.claim())
+});
+
+
+self.addEventListener('fetch', (event) => {
 
     const evt = event as FetchEvent;
 
@@ -24,4 +32,3 @@ addEventListener('fetch', (event) => {
 });
 
 
-declare const self: ServiceWorkerGlobalScope;

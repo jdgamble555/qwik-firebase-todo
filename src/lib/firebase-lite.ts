@@ -1,5 +1,5 @@
 import { RequestEventCommon } from "@builder.io/qwik-city";
-import { FirebaseError, initializeServerApp } from "firebase/app";
+import { initializeServerApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore/lite";
 
@@ -11,32 +11,19 @@ export const firebaseServer = async ({ headers }: RequestEventCommon<QwikCityPla
 
     const authIdToken = headers.get('Authorization')?.split('Bearer ')[1];
 
+    console.log(authIdToken);
+
     const serverApp = initializeServerApp(firebase_config, {
         authIdToken
     });
 
-    // auth
-
     const serverAuth = getAuth(serverApp);
     await serverAuth.authStateReady();
 
-    console.log(serverApp.settings.authIdToken);
-
-    if (serverAuth.currentUser === null) {
-        return {
-            error: 'Invalid Token',
-            serverAuth: null,
-            serverDB: null
-        };
-    }
-
-    // db
     const serverDB = getFirestore(serverApp);
 
     return {
         serverAuth,
-        serverDB,
-        error: null
+        serverDB
     };
-
 };

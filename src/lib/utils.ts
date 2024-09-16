@@ -11,7 +11,6 @@ export const getBodyContent = async (req: Request): Promise<BodyInit | null | un
     if (req.method === 'GET') {
         return null;
     }
-
     try {
         if (req.headers.get('Content-Type')?.includes('json')) {
             const json = await req.json();

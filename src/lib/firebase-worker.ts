@@ -1,5 +1,5 @@
 import { getApp, getApps, initializeApp } from "firebase/app";
-import { getAuth, getIdToken, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onIdTokenChanged, User } from "firebase/auth";
 
 const firebase_config = JSON.parse(
     import.meta.env.PUBLIC_FIREBASE_CONFIG
@@ -11,19 +11,25 @@ const workerApp = getApps().length
 
 const auth = getAuth(workerApp);
 
-export const getIdTokenPromise = (): Promise<string | null> => {
-    return new Promise((resolve, reject) => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+const getUser = async () => {
+
+    return new Promise<User | null>((resolve, reject) => {
+        const unsubscribe = onIdTokenChanged(auth, (user) => {
             unsubscribe();
-            if (!user) {
-                return resolve(null);
-            }
-            try {
-                const idToken = await getIdToken(user);
-                resolve(idToken);
-            } catch (e) {
-                reject(e);
-            }
-        }, reject);
+            resolve(user);
+        }, (error) => {
+            unsubscribe();
+            reject(error);
+        });
     });
+}
+
+export const getIdTokenPromise = async () => {
+
+    const user = await getUser();
+
+    if (!user) {
+        return null;
+    }
+    return await user.getIdToken();
 };
