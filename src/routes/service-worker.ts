@@ -14,14 +14,20 @@ setupServiceWorker();
 
 addEventListener('install', () => self.skipWaiting());
 
-addEventListener('activate', () => self.clients.claim());
+declare const self: ServiceWorkerGlobalScope;
 
-addEventListener('fetch', (event) => {
+
+self.addEventListener('activate', (event) => {
+
+    const evt = event as ExtendableEvent;
+
+    evt.waitUntil(self.clients.claim())
+});
+
+
+self.addEventListener('fetch', (event) => {
 
     const evt = event as FetchEvent;
 
     evt.respondWith(requestProcessor(evt));
 });
-
-
-declare const self: ServiceWorkerGlobalScope;
