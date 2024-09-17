@@ -18,6 +18,7 @@ import {
 import { useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useUser } from './user';
 import { auth, db } from './firebase';
+import { isBrowser } from '@builder.io/qwik/build';
 
 export interface TodoItem {
     id: string;
@@ -115,6 +116,10 @@ export function useTodos() {
 
 export const addTodo = (e: SubmitEvent) => {
 
+    if (!isBrowser) {
+        return;
+    }
+
     const user = auth?.currentUser;
 
     if (!user) {
@@ -130,10 +135,6 @@ export const addTodo = (e: SubmitEvent) => {
         return;
     }
 
-    if (!db) {
-        return;
-    }
-
     // reset form
     target.reset();
 
@@ -146,15 +147,9 @@ export const addTodo = (e: SubmitEvent) => {
 }
 
 export const updateTodo = (id: string, complete: boolean) => {
-    if (!db) {
-        return;
-    }
-    updateDoc(doc(db, 'todos', id), { complete });
+    if (isBrowser) updateDoc(doc(db, 'todos', id), { complete });
 }
 
 export const deleteTodo = (id: string) => {
-    if (!db) {
-        return;
-    }
-    deleteDoc(doc(db, 'todos', id));
+    if (isBrowser) deleteDoc(doc(db, 'todos', id));
 }

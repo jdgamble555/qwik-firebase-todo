@@ -18,13 +18,11 @@ export interface userData {
 };
 
 export const loginWithGoogle = $(() => {
-    if (isBrowser) {
-        signInWithPopup(auth, new GoogleAuthProvider());
-    }
+    if (isBrowser) signInWithPopup(auth, new GoogleAuthProvider());
 });
 
 export const logout = $(() => {
-    signOut(auth);
+    if (isBrowser) signOut(auth);
 });
 
 export function _useUser() {
