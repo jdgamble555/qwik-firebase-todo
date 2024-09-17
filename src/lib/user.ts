@@ -8,7 +8,6 @@ import {
 } from 'firebase/auth';
 import { auth } from './firebase';
 import { useShared } from './use-shared';
-import { isBrowser } from '@builder.io/qwik/build';
 
 export interface userData {
     photoURL: string | null;
@@ -17,13 +16,13 @@ export interface userData {
     email: string | null;
 };
 
-export const loginWithGoogle = $(() => {
-    if (isBrowser) signInWithPopup(auth, new GoogleAuthProvider());
-});
+export const loginWithGoogle = () => {
+    signInWithPopup(auth, new GoogleAuthProvider());
+};
 
-export const logout = $(() => {
-    if (isBrowser) signOut(auth);
-});
+export const logout = () => {
+    signOut(auth);
+};
 
 export function _useUser() {
 
