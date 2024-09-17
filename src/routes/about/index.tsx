@@ -7,9 +7,9 @@ export const useAboutPage = routeLoader$(async (event) => {
 
     const { serverDB, serverAuth } = await firebaseServer(event);
 
-    if (!serverAuth.currentUser) {
+    /*if (!serverAuth.currentUser) {
         throw event.error(401, 'You must be logged in!');
-    }
+    }*/
 
     return await getAbout(serverDB);
 });
