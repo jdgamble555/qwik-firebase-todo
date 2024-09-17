@@ -1,6 +1,7 @@
 import { getApp, getApps, initializeApp } from 'firebase/app';
-import { getAuth, signInWithPopup as _signInWithPopup } from 'firebase/auth';
+import { signInWithPopup as _signInWithPopup } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import * as FA from 'firebase/auth';
 
 // import your .env variable
 // PUBLIC_FIREBASE_CONFIG={YOUR FIREBASE CONFIG}
@@ -10,11 +11,10 @@ const firebase_config = JSON.parse(
 );
 
 // initialize firebase
-
 export const app = getApps().length
     ? getApp()
     : initializeApp(firebase_config);
 
 export const db = getFirestore(app);
-export const auth = getAuth(app);
+export const auth = FA.getAuth(app);
 
