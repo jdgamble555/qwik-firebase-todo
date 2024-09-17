@@ -2,12 +2,12 @@ import { useStore, $, useVisibleTask$ } from '@builder.io/qwik';
 import {
     GoogleAuthProvider,
     onIdTokenChanged,
-    signInWithPopup,
     signOut,
     type User
 } from 'firebase/auth';
 import { auth } from './firebase';
 import { useShared } from './use-shared';
+import * as FirebaseAuth from 'firebase/auth';
 
 export interface userData {
     photoURL: string | null;
@@ -17,7 +17,7 @@ export interface userData {
 };
 
 export const loginWithGoogle = () => {
-    signInWithPopup(auth, new GoogleAuthProvider());
+    FirebaseAuth.signInWithPopup(auth, new GoogleAuthProvider());
 };
 
 export const logout = () => {
