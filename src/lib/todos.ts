@@ -17,7 +17,7 @@ import {
 } from 'firebase/firestore';
 import { useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useUser } from './user';
-import * as FireSetup from './firebase';
+import { auth, db } from './firebase';
 
 export interface TodoItem {
     id: string;
@@ -74,7 +74,7 @@ export function useTodos() {
             return;
         }
 
-        if (!FireSetup.db) {
+        if (!db) {
             return;
         }
 
@@ -82,7 +82,7 @@ export function useTodos() {
 
             // query realtime todo list
             query(
-                collection(FireSetup.db, 'todos'),
+                collection(db, 'todos'),
                 where('uid', '==', user.data.uid),
                 orderBy('createdAt')
             ), (q) => {
@@ -115,7 +115,7 @@ export function useTodos() {
 
 export const addTodo = (e: SubmitEvent) => {
 
-    const user = FireSetup.auth?.currentUser;
+    const user = auth?.currentUser;
 
     if (!user) {
         throw 'No User!';
@@ -133,7 +133,7 @@ export const addTodo = (e: SubmitEvent) => {
     // reset form
     target.reset();
 
-    addDoc(collection(FireSetup.db, 'todos'), {
+    addDoc(collection(db, 'todos'), {
         uid: user.uid,
         text: task,
         complete: false,
@@ -142,9 +142,9 @@ export const addTodo = (e: SubmitEvent) => {
 }
 
 export const updateTodo = (id: string, complete: boolean) => {
-    updateDoc(doc(FireSetup.db, 'todos', id), { complete });
+    updateDoc(doc(db, 'todos', id), { complete });
 }
 
 export const deleteTodo = (id: string) => {
-    deleteDoc(doc(FireSetup.db, 'todos', id));
+    deleteDoc(doc(db, 'todos', id));
 }
