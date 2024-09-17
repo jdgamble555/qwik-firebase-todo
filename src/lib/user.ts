@@ -5,7 +5,7 @@ import {
     signOut,
     type User
 } from 'firebase/auth';
-import { auth } from './firebase';
+import * as FireSetup from './firebase';
 import { useShared } from './use-shared';
 import * as FirebaseAuth from 'firebase/auth';
 
@@ -17,11 +17,11 @@ export interface userData {
 };
 
 export const loginWithGoogle = () => {
-    FirebaseAuth.signInWithPopup(auth, new GoogleAuthProvider());
+    FirebaseAuth.signInWithPopup(FireSetup.auth, new GoogleAuthProvider());
 };
 
 export const logout = () => {
-    signOut(auth);
+    signOut(FireSetup.auth);
 };
 
 export function _useUser() {
@@ -40,14 +40,14 @@ export function _useUser() {
         _store.loading = true;
 
         // server environment
-        if (!auth) {
+        if (!FireSetup.auth) {
             _store.loading = false;
             _store.data = null;
             return;
         }
 
         // subscribe to user changes
-        return onIdTokenChanged(auth, (_user: User | null) => {
+        return onIdTokenChanged(FireSetup.auth, (_user: User | null) => {
 
             _store.loading = false;
 
