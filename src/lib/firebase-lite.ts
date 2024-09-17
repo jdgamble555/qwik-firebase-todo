@@ -17,13 +17,13 @@ export const firebaseServer = async ({ headers }: RequestEventCommon<QwikCityPla
         authIdToken
     });
 
-    const serverAuth = getAuth(serverApp);
-    await serverAuth.authStateReady();
+    //const serverAuth = getAuth(serverApp);
+    //await serverAuth.authStateReady();
 
     const serverDB = getFirestoreLite(serverApp);
 
     return {
-        serverAuth,
+        serverAuth: null,
         serverDB
     };
 };
