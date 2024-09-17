@@ -24,9 +24,7 @@ export const loginWithGoogle = () => {
 };
 
 export const logout = () => {
-    if (isBrowser) {
-        signOut(auth);
-    }    
+    signOut(auth);
 };
 
 export function _useUser() {

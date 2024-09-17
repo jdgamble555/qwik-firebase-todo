@@ -18,7 +18,6 @@ import {
 import { useStore, useVisibleTask$ } from '@builder.io/qwik';
 import { useUser } from './user';
 import { auth, db } from './firebase';
-import { isBrowser } from '@builder.io/qwik/build';
 
 export interface TodoItem {
     id: string;
@@ -75,10 +74,6 @@ export function useTodos() {
             return;
         }
 
-        if (!db) {
-            return;
-        }
-
         return onSnapshot(
 
             // query realtime todo list
@@ -116,32 +111,30 @@ export function useTodos() {
 
 export const addTodo = (e: SubmitEvent) => {
 
-    if (isBrowser) {
-        const user = auth?.currentUser;
+    const user = auth?.currentUser;
 
-        if (!user) {
-            throw 'No User!';
-        }
-
-        // get and reset form
-        const target = e.target as HTMLFormElement;
-        const form = new FormData(target);
-        const { task } = Object.fromEntries(form);
-
-        if (typeof task !== 'string') {
-            return;
-        }
-
-        // reset form
-        target.reset();
-
-        addDoc(collection(db, 'todos'), {
-            uid: user.uid,
-            text: task,
-            complete: false,
-            createdAt: serverTimestamp()
-        });
+    if (!user) {
+        throw 'No User!';
     }
+
+    // get and reset form
+    const target = e.target as HTMLFormElement;
+    const form = new FormData(target);
+    const { task } = Object.fromEntries(form);
+
+    if (typeof task !== 'string') {
+        return;
+    }
+
+    // reset form
+    target.reset();
+
+    addDoc(collection(db, 'todos'), {
+        uid: user.uid,
+        text: task,
+        complete: false,
+        createdAt: serverTimestamp()
+    });
 }
 
 export const updateTodo = (id: string, complete: boolean) => {
