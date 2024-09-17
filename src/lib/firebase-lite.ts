@@ -11,6 +11,8 @@ export const firebaseServer = async ({ headers }: RequestEventCommon<QwikCityPla
 
     const authIdToken = headers.get('Authorization')?.split('Bearer ')[1];
 
+    console.log(authIdToken);
+
     const serverApp = initializeServerApp(firebase_config, {
         authIdToken
     });
