@@ -2,10 +2,11 @@ import { useStore, $, useVisibleTask$ } from '@builder.io/qwik';
 import {
     GoogleAuthProvider,
     onIdTokenChanged,
+    signInWithPopup,
     signOut,
     type User
 } from 'firebase/auth';
-import { auth, signInWithPopup } from './firebase';
+import { auth } from './firebase';
 import { useShared } from './use-shared';
 
 export interface userData {
@@ -16,16 +17,10 @@ export interface userData {
 };
 
 export const loginWithGoogle = $(() => {
-    if (!signInWithPopup || !auth) {
-        return;
-    }
     signInWithPopup(auth, new GoogleAuthProvider());
 });
 
 export const logout = $(() => {
-    if (!auth) {
-        return;
-    }
     signOut(auth);
 });
 
