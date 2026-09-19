@@ -1,17 +1,17 @@
 import { component$ } from '@builder.io/qwik';
-import { useUser } from '~/lib/user';
+import { getUser } from '~/lib/auth';
 import Todos from './todos';
 import { Logout } from './helpers';
 
 export default component$(() => {
 
-    const user = useUser();
+    const user = getUser();
 
-    if (!user.data) {
+    if (!user.value.data) {
         return;
     }
 
-    const { displayName, photoURL, uid } = user.data;
+    const { displayName, photoURL, uid } = user.value.data;
 
     return (
         <div class="flex flex-col gap-3 items-center">
@@ -23,5 +23,4 @@ export default component$(() => {
         </div>
     );
 });
-
 

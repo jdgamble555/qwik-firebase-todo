@@ -3,11 +3,11 @@
   "description": "App with Routing built-in (recommended)",
   "type": "module",
   "engines": {
-    "node": "20"
+    "node": "^20.19.0 || >=22.12.0"
   },
   "private": true,
   "scripts": {
-    "build": "qwik build",
+    "build": "npm run build.types && npm run build.client && npm run build.server && npm run lint",
     "build.client": "vite build",
     "build.preview": "vite build --ssr src/entry.preview.tsx",
     "build.server": "vite build -c adapters/vercel-edge/vite.config.ts",
@@ -18,30 +18,33 @@
     "fmt": "prettier --write .",
     "fmt.check": "prettier --check .",
     "lint": "eslint \"src/**/*.ts*\"",
-    "preview": "qwik build preview && vite preview --open",
+    "preview": "npm run build && vite preview --open",
     "start": "vite --open --mode ssr",
     "qwik": "qwik"
   },
   "devDependencies": {
-    "@builder.io/qwik": "^1.8.0",
-    "@builder.io/qwik-city": "^1.8.0",
-    "@types/eslint": "^8.56.2",
-    "@types/node": "^20.11.20",
-    "@types/node-fetch": "latest",
-    "@typescript-eslint/eslint-plugin": "^6.19.1",
-    "@typescript-eslint/parser": "^6.19.1",
-    "autoprefixer": "^10.4.14",
-    "eslint": "^8.56.0",
-    "eslint-plugin-qwik": "^1.4.5",
-    "firebase": "^10.13.2",
+    "@builder.io/qwik": "^1.20.0",
+    "@builder.io/qwik-city": "^1.20.0",
+    "@types/eslint": "^8.56.12",
+    "@types/node": "^20.19.43",
+    "@types/node-fetch": "^2.6.13",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "autoprefixer": "^10.6.1",
+    "eslint": "^8.57.1",
+    "eslint-plugin-qwik": "^1.20.0",
+    "firebase": "^12.19.0",
     "node-fetch": "^3.3.2",
-    "postcss": "^8.4.31",
-    "prettier": "^3.2.4",
-    "prettier-plugin-tailwindcss": "^0.5.4",
-    "tailwindcss": "3.3.3",
-    "typescript": "5.3.3",
-    "undici": "*",
-    "vite": "^5.4.5",
-    "vite-tsconfig-paths": "^4.2.1"
+    "postcss": "^8.5.28",
+    "prettier": "^3.9.8",
+    "prettier-plugin-tailwindcss": "^0.5.14",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.9.3",
+    "undici": "^8.10.2",
+    "vite": "^7.3.6",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "dependencies": {
+    "valibot": "^1.5.0"
   }
 }

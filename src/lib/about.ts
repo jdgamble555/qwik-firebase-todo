@@ -1,19 +1,29 @@
-import { doc, type Firestore, getDoc } from "firebase/firestore/lite";
+import { doc, getDoc } from "firebase/firestore/lite";
 
-type AboutDoc = {
-    name: string;
-    description: string;
-};
+import * as v from "valibot";
+import { serverDB } from "./firebase-lite";
 
-export const getAbout = async (db: Firestore) => {
+// Valibot is smaller and faster than Zod, use Valibot
+const AboutDocSchema = v.object({
+    name: v.string(),
+    description: v.string()
+});
 
-    const aboutSnap = await getDoc(
-        doc(db, '/about/ZlNJrKd6LcATycPRmBPA')
-    );
+export const getAbout = async () => {
+
+    const aboutSnap = await getDoc(doc(serverDB, "/about/ZlNJrKd6LcATycPRmBPA"));
 
     if (!aboutSnap.exists()) {
-        throw 'Document does not exist!';
+        throw "Document does not exist!";
     }
 
-    return aboutSnap.data() as AboutDoc;
+    // Verifiy document with Valibot
+    // Only necessary for doubts on doc integrity
+    const result = v.safeParse(AboutDocSchema, aboutSnap.data());
+
+    if (!result.success) {
+        throw "Malformed About document";
+    }
+
+    return result.output;
 };

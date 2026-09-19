@@ -1,146 +1,193 @@
+import { useStore, useVisibleTask$ } from '@builder.io/qwik';
+import { FirebaseError } from 'firebase/app';
 import {
-    type DocumentData,
-    onSnapshot,
-    type QuerySnapshot,
-    Timestamp
-} from 'firebase/firestore';
-import {
-    addDoc,
     collection,
     deleteDoc,
     doc,
+    onSnapshot,
     orderBy,
     query,
     serverTimestamp,
+    setDoc,
+    Timestamp,
+    type FirestoreDataConverter,
     updateDoc,
     where
 } from 'firebase/firestore';
-import { useStore, useVisibleTask$ } from '@builder.io/qwik';
-import { useUser } from './user';
+import { getUser } from './auth';
 import { auth, db } from './firebase';
 
-export interface TodoItem {
-    id: string;
-    text: string;
-    complete: boolean;
-    createdAt: Date;
-    uid: string;
-};
+// Only used to create example texts -- DO NOT USE IN PRODUCTION
+export const generateText = () =>
+    doc(collection(db, 'todos'))
+        .id
+        .substring(0, 10)
+        .toLowerCase();
 
-export const snapToData = (
-    q: QuerySnapshot<DocumentData, DocumentData>
-) => {
+const todoConverter: FirestoreDataConverter<TodoDoc> = {
+    toFirestore(todo) {
+        return todo;
+    },
 
-    // creates todo data from snapshot
-    if (q.empty) {
-        return [];
-    }
-    return q.docs.map((doc) => {
-        const data = doc.data({
+    fromFirestore(snapshot): TodoDoc {
+
+        // Use an estimated date for pending server timestamps
+        const data = snapshot.data({
             serverTimestamps: 'estimate'
         });
-        const createdAt = data['createdAt'] as Timestamp;
+
+        // Convert the Firestore timestamp to a Date
+        const createdAt = data.createdAt as Timestamp;
+
         return {
-            id: doc.id,
+            id: snapshot.id,
+            uid: data.uid,
             text: data.text,
             complete: data.complete,
-            createdAt: createdAt.toDate(),
-            uid: data.uid
+            createdAt: createdAt.toDate()
         };
-    }) as TodoItem[];
-}
+    }
+};
 
-export function useTodos() {
+export const useTodos = () => {
 
-    const user = useUser();
+    const user = getUser();
 
-    const _store = useStore<{
-        todos: TodoItem[],
-        loading: boolean
+    const todos = useStore<{
+        value: {
+            data: TodoDoc[];
+            loading: boolean;
+            error: string | null;
+        };
     }>({
-        todos: [],
-        loading: true
+        value: {
+            data: [],
+            loading: true,
+            error: null
+        }
     });
 
-    useVisibleTask$(({ track }) => {
+    useVisibleTask$(({ track, cleanup }) => {
 
-        track(() => user.data);
+        // Reconnect when the logged-in user changes
+        const currentUser = track(() => user.value.data);
 
-        _store.loading = true;
-
-        if (!user.data) {
-            _store.loading = false;
-            _store.todos = [];
+        // Must be logged in
+        if (!currentUser) {
+            todos.value = {
+                data: [],
+                loading: false,
+                error: null
+            };
             return;
         }
 
-        return onSnapshot(
+        todos.value = {
+            data: [],
+            loading: true,
+            error: null
+        };
 
-            // query realtime todo list
+        // Subscribe to this user's todos
+        const unsubscribe = onSnapshot(
             query(
                 collection(db, 'todos'),
-                where('uid', '==', user.data.uid),
+                where('uid', '==', currentUser.uid),
                 orderBy('createdAt')
-            ), (q) => {
+            ).withConverter(todoConverter),
+            (snapshot) => {
 
-                // toggle loading
-                _store.loading = false;
+                const data = snapshot.docs.map((item) => item.data());
 
-                // get data, map to todo type
-                const data = snapToData(q);
-
-                /**
-                 * Note: Will get triggered 2x on add 
-                 * 1 - for optimistic update
-                 * 2 - update real date from server date
-                 */
-
-                // print data in dev mode
                 if (import.meta.env.DEV) {
                     console.log(data);
                 }
 
-                // add to store
-                _store.todos = data;
-            });
+                todos.value = {
+                    data,
+                    loading: false,
+                    error: null
+                };
+            },
+            (error) => {
+                todos.value = {
+                    data: [],
+                    loading: false,
+                    error: error.message
+                };
+            }
+        );
+
+        // Remove the previous listener when the user changes
+        cleanup(unsubscribe);
     });
 
-    return _store;
+    return todos;
 };
 
+export const addTodo = async (text: string) => {
 
-export const addTodo = (e: SubmitEvent) => {
-
-    const user = auth?.currentUser;
+    const user = auth.currentUser;
 
     if (!user) {
-        throw 'No User!';
+        return { error: 'No User!' };
     }
 
-    // get and reset form
-    const target = e.target as HTMLFormElement;
-    const form = new FormData(target);
-    const { task } = Object.fromEntries(form);
+    try {
+        await setDoc(
+            doc(collection(db, 'todos')),
+            {
+                uid: user.uid,
+                text,
+                complete: false,
+                createdAt: serverTimestamp()
+            }
+        );
 
-    if (typeof task !== 'string') {
-        return;
+        return { error: null };
+    } catch (error) {
+        if (error instanceof FirebaseError) {
+            return { error: error.message };
+        }
+
+        throw error;
     }
+};
 
-    // reset form
-    target.reset();
+export const updateTodo = async (id: string, newStatus: boolean) => {
 
-    addDoc(collection(db, 'todos'), {
-        uid: user.uid,
-        text: task,
-        complete: false,
-        createdAt: serverTimestamp()
-    });
-}
+    try {
+        await updateDoc(
+            doc(db, 'todos', id),
+            {
+                complete: newStatus,
+                updatedAt: serverTimestamp()
+            }
+        );
 
-export const updateTodo = (id: string, complete: boolean) => {
-    updateDoc(doc(db, 'todos', id), { complete });
-}
+        return { error: null };
+    } catch (error) {
+        if (error instanceof FirebaseError) {
+            return { error: error.message };
+        }
 
-export const deleteTodo = (id: string) => {
-    deleteDoc(doc(db, 'todos', id));
-}
+        throw error;
+    }
+};
+
+export const deleteTodo = async (id: string) => {
+
+    try {
+        await deleteDoc(
+            doc(db, 'todos', id)
+        );
+
+        return { error: null };
+    } catch (error) {
+        if (error instanceof FirebaseError) {
+            return { error: error.message };
+        }
+
+        throw error;
+    }
+};

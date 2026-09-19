@@ -1,17 +1,9 @@
 import { component$ } from "@builder.io/qwik";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import { getAbout } from "~/lib/about";
-import { firebaseServer } from "~/lib/firebase-lite";
 
-export const useAboutPage = routeLoader$(async (event) => {
-
-    const { serverDB, serverAuth } = await firebaseServer(event);
-
-    if (!serverAuth.currentUser) {
-        throw event.error(401, 'You must be logged in!');
-    }
-
-    return await getAbout(serverDB);
+export const useAboutPage = routeLoader$(async () => {
+    return await getAbout();
 });
 
 export default component$(() => {

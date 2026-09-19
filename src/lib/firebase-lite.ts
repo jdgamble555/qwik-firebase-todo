@@ -1,29 +1,11 @@
-import { RequestEventCommon } from "@builder.io/qwik-city";
-import { initializeServerApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore as getFirestore } from "firebase/firestore/lite";
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore/lite";
 
 const firebase_config = JSON.parse(
     import.meta.env.PUBLIC_FIREBASE_CONFIG
 );
 
-export const firebaseServer = async ({ headers }: RequestEventCommon<QwikCityPlatform>) => {
+const serverApp = initializeApp(firebase_config);
 
-    const authIdToken = headers.get('Authorization')?.split('Bearer ')[1];
-
-    console.log(authIdToken);
-
-    const serverApp = initializeServerApp(firebase_config, {
-        authIdToken
-    });
-
-    const serverAuth = getAuth(serverApp);
-    await serverAuth.authStateReady();
-
-    const serverDB = getFirestore(serverApp);
-
-    return {
-        serverAuth,
-        serverDB
-    };
-};
+// !!! This is imported from `firestore/lite` directory for smaller server imports
+export const serverDB = getFirestore(serverApp);

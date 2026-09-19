@@ -1,4 +1,4 @@
-import { loginWithGoogle, logout } from "~/lib/user";
+import { loginWithGoogle, logout } from "~/lib/auth";
 
 export const Loading = () => {
     return <p>Loading...</p>;
