@@ -1,9 +1,9 @@
 import { useStore, useVisibleTask$ } from '@builder.io/qwik';
-import { FirebaseError } from 'firebase/app';
 import {
     collection,
     deleteDoc,
     doc,
+    FirestoreError,
     onSnapshot,
     orderBy,
     query,
@@ -130,7 +130,7 @@ export const addTodo = async (text: string) => {
     const user = auth.currentUser;
 
     if (!user) {
-        return { error: 'No User!' };
+        return { error: 'No user' };
     }
 
     try {
@@ -146,7 +146,7 @@ export const addTodo = async (text: string) => {
 
         return { error: null };
     } catch (error) {
-        if (error instanceof FirebaseError) {
+        if (error instanceof FirestoreError) {
             return { error: error.message };
         }
 
@@ -167,7 +167,7 @@ export const updateTodo = async (id: string, newStatus: boolean) => {
 
         return { error: null };
     } catch (error) {
-        if (error instanceof FirebaseError) {
+        if (error instanceof FirestoreError) {
             return { error: error.message };
         }
 
@@ -184,7 +184,7 @@ export const deleteTodo = async (id: string) => {
 
         return { error: null };
     } catch (error) {
-        if (error instanceof FirebaseError) {
+        if (error instanceof FirestoreError) {
             return { error: error.message };
         }
 

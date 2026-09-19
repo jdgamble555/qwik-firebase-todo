@@ -12,20 +12,34 @@ import {
     signOut,
     type User
 } from 'firebase/auth';
+import { FirebaseError } from 'firebase/app';
 import { auth } from './firebase';
 
 // User context key
 const USER_CONTEXT = createContextId<{ value: UserState }>('user');
 
-export const loginWithGoogle = () => {
-    return signInWithPopup(
-        auth,
-        new GoogleAuthProvider()
-    );
+export const loginWithGoogle = async () => {
+    try {
+        await signInWithPopup(auth, new GoogleAuthProvider());
+        return { error: null };
+    } catch (error) {
+        if (error instanceof FirebaseError) {
+            return { error: error.message };
+        }
+        throw error;
+    }
 };
 
-export const logout = () => {
-    return signOut(auth);
+export const logout = async () => {
+    try {
+        await signOut(auth);
+        return { error: null };
+    } catch (error) {
+        if (error instanceof FirebaseError) {
+            return { error: error.message };
+        }
+        throw error;
+    }
 };
 
 export const setUser = () => {
